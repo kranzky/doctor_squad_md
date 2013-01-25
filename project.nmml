@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<meta title="engine" package="com.example.app" version="1.0.0" company="" />
+
+ 	<app file="Main" main="Main" path="bin" />
+
+	<window width="640" height="480" orientation="portrait" resizable="true" />
+	<window fps="30" />
+
+	<source path="src" />
+
+	<haxelib name="nme" />
+	<haxelib name="HaxePunk" />
+
+	<assets path="assets/graphics" rename="gfx" include="*.png|*.jpg" />
+	<assets path="assets/audio" rename="sfx" include="*.mp3" if="flash" />
+	<assets path="assets/audio" rename="sfx" include="*.wav|*.ogg" unless="flash" />
+	<assets path="assets/font" rename="font" include="*.ttf" />
+</project>
