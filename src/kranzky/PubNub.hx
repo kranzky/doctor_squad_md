@@ -7,24 +7,31 @@ import cpp.vm.Thread;
 class PubNub
 {
   private var _sub_thread:Thread;
-  private var _pub_url:String;
+  private var _pub_pool:Array<Thread>;
+  private var _next_thread:Int;
 
   // ref: http://www.pubnub.com/tutorial/http-rest-push-api
-  public function new(pub_key, sub_key, channel)
+  public function new(pub_key, sub_key, channel, pool_size=10)
   {
     var service = "http://pubsub.pubnub.com";
     _sub_thread = _create_subscriber(service+"/subscribe/"+sub_key+"/"+channel+"/0/");
-    _pub_url = service+"/publish/"+pub_key+"/"+sub_key+"/0/"+channel+"/0/";
+    var pub_url = service+"/publish/"+pub_key+"/"+sub_key+"/0/"+channel+"/0/";
+    _pub_pool = new Array<Thread>();
+    for (i in 0...pool_size) {
+      _pub_pool.push(_create_publisher(pub_url));
+    }
+    _next_thread = 0;
   }
 
-  // TODO: sending spawns a new thread. This is because a single thread can't
+  // We round-robin to a pool of threads. This is because a single thread can't
   // process a rapid succession of sends quickly enough, so they get buffered
   // up significantly, which causes a massive delay. Brad saw this last night
-  // just before we left. It's fixed now, but rather than creating a new thread
-  // each call, we should round-robin to a thread pool.
+  // just before we left.
   public function send(object):Void
   {
-    var pub_thread = _create_publisher(_pub_url);
+    var pub_thread = _pub_pool[_next_thread];
+    _next_thread += 1;
+    _next_thread %= _pub_pool.length;
     pub_thread.sendMessage(object);
   }
 
@@ -55,18 +62,20 @@ class PubNub
   {
     var thread = Thread.create(function():Void {
       var base = Thread.readMessage(true);
-      var object = Thread.readMessage(true);
-      var url = base + Json.stringify(object);
-      var client = new haxe.Http(url);
-      client.setHeader('Accept', 'application/json');
-      client.noShutdown = true;
-      client.onError = function(error) {
-        trace("PUB ERROR : " + Std.string(error));
-      };
-      client.onData = function(data) {
-        // NOOP
-      };
-      client.request(false);
+      while(true) {
+        var object = Thread.readMessage(true);
+        var url = base + Json.stringify(object);
+        var client = new haxe.Http(url);
+        client.setHeader('Accept', 'application/json');
+        client.noShutdown = true;
+        client.onError = function(error) {
+          trace("PUB ERROR : " + Std.string(error));
+        };
+        client.onData = function(data) {
+          // NOOP
+        };
+        client.request(false);
+      }
     });
     thread.sendMessage(base);
     return thread;

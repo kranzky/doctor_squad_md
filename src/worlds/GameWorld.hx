@@ -29,7 +29,8 @@ class GameWorld extends World
     var pub_key = "pub-c-0834dc19-81c6-4378-9ab7-db3d457d9472";
     var sub_key = "sub-c-132a21ec-66ec-11e2-903d-12313f022c90";
     var channel = "kranzky";
-    _pubnub = new PubNub(pub_key, sub_key, channel);
+    var pool_size = 10;
+    _pubnub = new PubNub(pub_key, sub_key, channel, pool_size);
 
     _messageImage = new Text("Hello");
     var x = HXP.screen.width/2;
@@ -52,10 +53,7 @@ class GameWorld extends World
       }
       // Publish an object to subscribers. I suggest you use small hashes like
       // this without nesting or arrays of values if possible; I had lots of
-      // pain with Json parsing. Also, each send creates a new thread, so it's
-      // possible to exhaust threads and crash if you spam this. The PubNub
-      // class should probably instance a pool of threads for sending and reuse
-      // them in a round-robin. But I'm too tired for that right now.
+      // pain with Json parsing.
       var object = {
         message: "hello",
         counter: _counter,
