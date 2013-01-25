@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<meta title="doctor_squad_md" package="kranzky" version="1.0.0" company="" />
+	<meta title="doctor_squad_md" package="kranzky.engine" version="1.0.0" company="" />
 
  	<app file="Main" main="Main" path="bin" />
 

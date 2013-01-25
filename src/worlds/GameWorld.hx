@@ -45,12 +45,16 @@ class GameWorld extends World
       } else {
         _messageImage.text = "Hello";
       }
-      _pubnub.send("hello-from-" + Sys.systemName() + "-" + _counter);
+      var object = {
+        message: "hello",
+        counter: _counter,
+        system: Sys.systemName()
+      };
+      _pubnub.send(object);
       _counter += 1;
     }
-    var response = _pubnub.read();
-    if (response != null) {
-      trace("READ: " + response);
-    }
+    _pubnub.read(function(message) {
+      trace("READ: " + message);
+    });
   }
 }
