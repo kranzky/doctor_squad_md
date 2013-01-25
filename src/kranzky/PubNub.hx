@@ -9,6 +9,7 @@ class PubNub
   private var _sub_thread:Thread;
   private var _pub_url:String;
 
+  // ref: http://www.pubnub.com/tutorial/http-rest-push-api
   public function new(pub_key, sub_key, channel)
   {
     var service = "http://pubsub.pubnub.com";
@@ -16,12 +17,22 @@ class PubNub
     _pub_url = service+"/publish/"+pub_key+"/"+sub_key+"/0/"+channel+"/0/";
   }
 
+  // TODO: sending spawns a new thread. This is because a single thread can't
+  // process a rapid succession of sends quickly enough, so they get buffered
+  // up significantly, which causes a massive delay. Brad saw this last night
+  // just before we left. It's fixed now, but rather than creating a new thread
+  // each call, we should round-robin to a thread pool.
   public function send(object):Void
   {
     var pub_thread = _create_publisher(_pub_url);
     pub_thread.sendMessage(object);
   }
 
+  // TODO: we should padd a Json object back to notify instead of a string, but
+  // I don't know how to specify the method signature for the notify function.
+  // The complexity here is that the message we read may be a comma-separated
+  // list of objects, but we want to notify one object at a time, plus the fact
+  // that the read queue may require multiple reads to empty.
   public function read(notify):Void
   {
     var regex_content = ~/^(\{.*?\}),(.*)$/;

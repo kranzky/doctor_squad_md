@@ -1,4 +1,6 @@
-doctor_squad_md
+Doctor Squad MD
 ===============
 
-Doctor Squad MD
+OK guys, good luck. Hope I've left you with something you can use.
+
+- Kranzky.
