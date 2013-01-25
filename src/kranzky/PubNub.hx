@@ -24,9 +24,18 @@ class PubNub
 
   public function read(notify):Void
   {
+    var regex_content = ~/^(\{.*?\}),(.*)$/;
     var message = Thread.readMessage(false);
     while (message != null) {
-      notify(message);
+      while(true) {
+          if (regex_content.match(message)) {
+            notify(regex_content.matched(1));
+            message = regex_content.matched(2);
+          } else {
+            notify(message);
+            break;
+          }
+        }
       message = Thread.readMessage(false);
     }
   }
@@ -58,7 +67,7 @@ class PubNub
       var main:Thread = Thread.readMessage(true);
       var base = Thread.readMessage(true);
       var time_token = "0";
-      var r = ~/^\[(.*),"(.*)"\]$/;
+      var regex_response = ~/^\[\[(.*)\],"(.*)"\]$/;
       while(true) {
         var url = base + time_token;
         var client = new haxe.Http(url);
@@ -68,10 +77,12 @@ class PubNub
           trace("SUB ERROR : " + Std.string(error));
         };
         client.onData = function(data) {
-          r.match(data);
-          var object = Json.parse(r.matched(1));
-          time_token = r.matched(2);
-          main.sendMessage(object);
+          regex_response.match(data);
+          time_token = regex_response.matched(2);
+          var payload = regex_response.matched(1);
+          if (payload.length > 2) {
+            main.sendMessage(payload);
+          }
         };
         client.request(false);
       }

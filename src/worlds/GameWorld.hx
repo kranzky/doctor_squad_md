@@ -2,6 +2,8 @@ package worlds;
 
 import kranzky.PubNub;
 
+import haxe.Json;
+
 import com.haxepunk.HXP;
 import com.haxepunk.World;
 import com.haxepunk.utils.Input;
@@ -55,6 +57,7 @@ class GameWorld extends World
     }
     _pubnub.read(function(message) {
       trace("READ: " + message);
+      var object = Json.parse(message);
     });
   }
 }
