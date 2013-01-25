@@ -16,6 +16,7 @@ class GameWorld extends World
   private var _messageEntity:Entity;
   private var _sub_channel:Thread;
   private var _pub_channel:Thread;
+  private var _counter:Int;
 
   public function new()
   {
@@ -26,6 +27,8 @@ class GameWorld extends World
 
     _messageImage = new Text("Hello");
     _messageEntity = new Entity(HXP.screen.width/2, HXP.screen.height/2, _messageImage);
+
+    _counter = 1;
   }
 
   public override function begin()
@@ -41,7 +44,8 @@ class GameWorld extends World
       } else {
         _messageImage.text = "Hello";
       }
-      _pub_channel.sendMessage("hello-from-" + Sys.systemName());
+      _pub_channel.sendMessage("hello-from-" + Sys.systemName() + "-" + _counter);
+      _counter += 1;
     }
     var response = Thread.readMessage(false);
     if (response != null) {
@@ -68,7 +72,6 @@ class GameWorld extends World
           // NOOP
         };
         client.request(false);
-        Sys.sleep(.1);
       }
     });
 
@@ -93,11 +96,10 @@ class GameWorld extends World
         };
         client.onData = function(body) {
           var data = Json.parse(body);
-          time_token = data[1];      
+          time_token = data[1];
           main.sendMessage(data[0]);
         };
         client.request(false);
-        Sys.sleep(.1);
       }
     });
 
