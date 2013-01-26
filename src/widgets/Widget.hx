@@ -17,8 +17,14 @@ class Widget
     initialise();
   }
 
-  public function send( message ):Void
+  public function send( action, data ):Void
   {
+    var message:Publishable = {
+      type: "widget",
+      action: action,
+      data: data,
+      widgetId: _widgetId
+    };
     _pubnub.send( message );
   }
 

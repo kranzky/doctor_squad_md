@@ -63,13 +63,7 @@ class Generator extends Widget
     trace("we clicked switch");
 
     // send msg
-    var msg:Publishable = {
-      type: "widget",
-      action: "switch",
-      data: _switch.on ? "on" : "off",
-      widgetId: _widgetId
-    }
-    this.send( msg );
+    send( "switch", _switch.on ? "on" : "off" );
   }
 
   private function updateState():Void
