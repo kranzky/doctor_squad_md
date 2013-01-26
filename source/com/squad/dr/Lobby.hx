@@ -38,18 +38,6 @@ class Lobby extends FlxState
     {
       //Tell Flixel to change the active game state to the actual game
       //FlxG.switchState( new Theatre( ) );
-    }
-
-    override public function destroy():Void
-    {
-      super.destroy();
-    }
-
-    override public function update():Void
-    {
-      PubNub.room.read(function(message) {
-        trace(message);
-      });
       var pub_msg_1 = {
         type: "hello",
         data: Sys.systemName(),
@@ -62,6 +50,19 @@ class Lobby extends FlxState
       PubNub.room.send(pub_msg_1);
       PubNub.room.send(pub_msg_2);
       _count += 1;
+    }
+
+    override public function destroy():Void
+    {
+      super.destroy();
+    }
+
+    override public function update():Void
+    {
+      PubNub.room.read(function(message) {
+        trace(message);
+      });
+
       super.update();
     }
 }
