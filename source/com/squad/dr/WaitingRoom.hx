@@ -34,9 +34,9 @@ class WaitingRoom extends FlxState
       trace("Welcome to Waiting Room #" + PubNub.room.get_channel());
 
       _observer_key = PubNub.room.register({type: "enter"}, function(message) {
-        trace("Someone entered the room.");
+        trace("User #" + message.ownerId + " entered the room." );
       });
-      PubNub.room.send({type: "enter"});
+      PubNub.room.send({type: "enter", ownerId: User.me.id});
     }
 
     //The on click handler for the start button
