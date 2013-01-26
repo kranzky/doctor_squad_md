@@ -26,7 +26,7 @@ class Lobby extends FlxState
 	override public function create():Void
   {
     #if !neko
-    FlxG.bgColor = 0xff131c1b;
+    FlxG.bgColor = 0xff631c1b;
     #else
     FlxG.bgColor = {rgb: 0x131c1b, a: 0xff};
     #end
