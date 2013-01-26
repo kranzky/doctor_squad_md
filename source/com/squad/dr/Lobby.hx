@@ -18,6 +18,7 @@ import com.squad.dr.Keypad;
 import com.squad.dr.widgets.Widget;
 import com.squad.dr.widgets.Generator;
 import com.squad.dr.tools.Scalpel;
+import com.squad.dr.tools.Syringe;
 
 class Lobby extends FlxState
 {
@@ -44,8 +45,10 @@ class Lobby extends FlxState
       trace("Adding generator");
       add(g);
 
-      var s = new Scalpel(1, true, true, 400, 400);
+      var s = new Scalpel(2, true, true, 400, 400);
       add(s);
+      var sy = new Syringe(3, true, true, 200, 400, ["Adrenaline", "Ephidrine", "Paradoxamol"]);
+      add(sy);
     }
 
     //The on click handler for the start button
