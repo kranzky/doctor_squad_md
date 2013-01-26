@@ -24,7 +24,7 @@ class Theatre extends FlxState
     //add your objects to the game stage to be drawn
     add(debug);
     add(controls);
-    
+     
      
   }
    

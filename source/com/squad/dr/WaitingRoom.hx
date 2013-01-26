@@ -15,12 +15,10 @@ import org.flixel.FlxTextField;
 import nme.text.TextFieldType;
 import com.squad.dr.Keypad;
 
-import com.squad.dr.widgets.Widget;
-import com.squad.dr.widgets.Generator;
-
-class Lobby extends FlxState
+class WaitingRoom extends FlxState
 {
-	override public function create():Void
+  private var _observer_key:Int;
+  override public function create():Void
     {
       #if !neko
       FlxG.bgColor = 0xff131c1b;
@@ -29,35 +27,34 @@ class Lobby extends FlxState
       #end
       FlxG.mouse.show();
 
-      //add the entry keypad
-      var keypad = new Keypad(200, 200, function(room) {
-        PubNub.room.set_channel(room);
-        FlxG.switchState(new WaitingRoom());
-        });
+      //create a button with the label Start and set an on click function
+      var startButton = new FlxButton(0, 0, "Start", onStartClick);
+      add(startButton);
 
-      add(keypad);
+      trace("Welcome to Waiting Room #" + PubNub.room.get_channel());
 
-      trace ("added keypad");
-      trace("Making generator");
-      var g = new Generator( 1, true, true );
-      trace("Adding generator");
-      add(g);
+      _observer_key = PubNub.room.register({type: "enter"}, function(message) {
+        trace("Someone entered the room.");
+      });
+      PubNub.room.send({type: "enter"});
     }
 
     //The on click handler for the start button
     private function onStartClick( ):Void
     {
       //Tell Flixel to change the active game state to the actual game
-      //FlxG.switchState( new Theatre( ) );
+      FlxG.switchState(new Theatre());
     }
 
     override public function destroy():Void
     {
+      PubNub.room.deregister(_observer_key);
       super.destroy();
     }
 
     override public function update():Void
     {
+      PubNub.room.pump();
       super.update();
     }
 }

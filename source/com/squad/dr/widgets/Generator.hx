@@ -29,7 +29,6 @@ class Generator extends Widget
         //_button = new Button(x, y, buttonPushed, _canInteract);
         var _button = new PxButton(x, y, "ksadjhjkdsh", buttonPushed);
         _button.loadGraphic( "assets/dr/square_button.png", false, false, 45, 45);
-        _button.frameWidth = 20;
         //var bbutton = new FlxButton(x, y, "testing",  buttonPushed);
         _power = 30.0;
         updateState();
