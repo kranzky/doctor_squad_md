@@ -3,6 +3,7 @@ package com.squad.dr;
 class User
 {
   public var id:Int;
+  public var is_boss:Bool=false;
 
   private static var _is_valid:Bool;
   public static var me(_get_me, null):User;
