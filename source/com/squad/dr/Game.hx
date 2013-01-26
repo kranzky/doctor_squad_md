@@ -38,7 +38,11 @@ class Game
 
   private function _state_spawn()
   {
-    Spawner.god.create('Generator');
+    if (User.me.is_boss) {
+      Spawner.god.create('Generator');
+      Spawner.god.create('Scalpel');
+      Spawner.god.create('Syringe');
+    }
     _switch_to('Play');
   }
 
