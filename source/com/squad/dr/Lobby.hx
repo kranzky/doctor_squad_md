@@ -11,10 +11,13 @@ import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
 import org.flixel.FlxU;
+import org.flixel.FlxTextField;
+import nme.text.TextFieldType;
+import com.squad.dr.Keypad;
 
 class Lobby extends FlxState
 {
-	override public function create():Void
+  override public function create():Void
     {
       #if !neko
       FlxG.bgColor = 0xff131c1b;
@@ -26,7 +29,14 @@ class Lobby extends FlxState
       //create a button with the label Start and set an on click function
       var startButton = new FlxButton(0, 0, "Start", onStartClick);
       //add the button to the state draw list
-      add(startButton);
+      var keypad = new Keypad(200, 200, function(room) {
+        trace("They selected " + room);
+        });
+
+      add(keypad);
+      
+      trace ("added keypad");
+      //add(startButton);
       
     }
  
