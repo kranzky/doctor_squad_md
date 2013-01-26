@@ -11,7 +11,7 @@ import com.squad.dr.widgets.Widget;
 class Generator extends Widget
 {
     private var _darkness: FlxSprite;
-    //private var _button: Button;
+    private var _button: Button;
     private var _power:Float = 30.0;
     private var _sendTimer:Float = 1.0;
 
@@ -22,18 +22,16 @@ class Generator extends Widget
         var y = 100;
         super( widgetId, owned, canInteract );
         _darkness = new FlxSprite(0, 0);
-        _darkness.makeGraphic(FlxG.width, FlxG.height, 0x00000000);
-        //_darkness.fill(0x000000);
-        //_darkness.blend = "screen";
+        _darkness.makeGraphic(FlxG.width, FlxG.height, 0xff000000); //colours are ARGB
+        //_darkness.fill(0x0000ff);
+        _darkness.blend = nme.display.BlendMode.SCREEN;
 
-        //_button = new Button(x, y, buttonPushed, _canInteract);
-        var _button = new PxButton(x, y, "ksadjhjkdsh", buttonPushed);
+        _button = new Button(x, y, buttonPushed, _canInteract);
         _button.loadGraphic( "assets/dr/square_button.png", false, false, 45, 45);
-        //var bbutton = new FlxButton(x, y, "testing",  buttonPushed);
         _power = 30.0;
-        updateState();
+        add(_darkness);
         add(_button);
-        //add(_darkness);
+        updateState();
     }
 
     public override function message(action:String, data:String)
