@@ -11,7 +11,8 @@ class Button extends FlxButton
   public function new(x, y, callbackFunction, usable_)
   {
     trace("button instantiated");
-    super(x, y, "Hello", _pushed);
+    super(x, y, "Yo Brother", _pushed);
+    
     trace("new button");
 
     usable = usable_;

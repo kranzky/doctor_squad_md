@@ -10,7 +10,7 @@ import com.squad.dr.widgets.Widget;
 class Generator extends Widget
 {
     private var _darkness: FlxSprite;
-    private var _button:FlxButton; //Button;
+    private var _button: Button;
     private var _power:Float = 30.0;
     private var _sendTimer:Float = 1.0;
 
@@ -21,15 +21,15 @@ class Generator extends Widget
         var y = 100;
         super( widgetId, pubnub, owned, canInteract );
         _darkness = new FlxSprite(0, 0);
-        _darkness.makeGraphic(FlxG.width, FlxG.height, 0xFFFFFFFF);
+        _darkness.makeGraphic(FlxG.width, FlxG.height, 0x00000000);
         //_darkness.fill(0x000000);
         //_darkness.blend = "screen";
 
-        //_button = new Button(x, y, buttonPushed, _canInteract);
-        var bbutton = new FlxButton(x, y, "testing",  buttonPushed);
+        _button = new Button(x, y, buttonPushed, _canInteract);
+        //var bbutton = new FlxButton(x, y, "testing",  buttonPushed);
         _power = 30.0;
         updateState();
-        add(bbutton);
+        add(_button);
         //add(_darkness);
     }
 

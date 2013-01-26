@@ -21,11 +21,13 @@ class Lobby extends FlxState
   private var _count:Int;
 	override public function create():Void
     {
-      #if !neko
+      //#if !neko
+      //FlxG.bgColor = 0xff131c1b;
+      //#else
+      //FlxG.bgColor = {rgb: 0x131c1b, a: 0xff};
+      //#end
+      //FlxG.bgColor = {rgb: 0x0000ff, a:0xff};
       FlxG.bgColor = 0xff131c1b;
-      #else
-      FlxG.bgColor = {rgb: 0x131c1b, a: 0xff};
-      #end
       FlxG.mouse.show();
 
       _count = 0;
