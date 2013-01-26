@@ -11,23 +11,23 @@ import com.squad.dr.widgets.Widget;
 class Generator extends Widget
 {
     private var _darkness: FlxSprite;
-    private var _button: PxButton;
+    //private var _button: Button;
     private var _power:Float = 30.0;
     private var _sendTimer:Float = 1.0;
 
-    public function new ( widgetId, pubnub, owned, canInteract )
+    public function new ( widgetId, owned, canInteract )
     {
         trace("new generator");
         var x = 100;
         var y = 100;
-        super( widgetId, pubnub, owned, canInteract );
+        super( widgetId, owned, canInteract );
         _darkness = new FlxSprite(0, 0);
         _darkness.makeGraphic(FlxG.width, FlxG.height, 0x00000000);
         //_darkness.fill(0x000000);
         //_darkness.blend = "screen";
 
         //_button = new Button(x, y, buttonPushed, _canInteract);
-        _button = new PxButton(x, y, "ksadjhjkdsh", buttonPushed);
+        var _button = new PxButton(x, y, "ksadjhjkdsh", buttonPushed);
         _button.loadGraphic( "assets/dr/square_button.png", false, false, 45, 45);
         _button.frameWidth = 20;
         //var bbutton = new FlxButton(x, y, "testing",  buttonPushed);
@@ -50,6 +50,7 @@ class Generator extends Widget
 
     public override function update()
     {
+        super.update();
         if (_power > 0)
         {
         _power = _power - (FlxG.elapsed*2);

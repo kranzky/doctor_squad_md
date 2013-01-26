@@ -15,17 +15,14 @@ import com.squad.dr.PubNub;
 class Widget extends FlxGroup
 {
   public var _canInteract:Bool;
-  public var _pubnub: PubNub;
-          
   private var _widgetId:Int;
   private var _owned:Bool = false;
 
-  public function new( widgetId, pubnub, owned, canInteract )
+  public function new( widgetId, owned, canInteract )
   {
     super();
     _widgetId = widgetId;
     _canInteract = canInteract;
-    _pubnub = pubnub;
     _owned = owned;
     initialise();
   }
@@ -39,7 +36,7 @@ class Widget extends FlxGroup
     data: data,
     widgetId: _widgetId
     };
-    _pubnub.send( message );
+    PubNub.room.send( message );
   }
 
   public function initialise():Void
