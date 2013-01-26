@@ -9,30 +9,18 @@ class Widget extends FlxGroup
 {
   public var _canInteract:Bool;
   private var _widgetId:Int;
-  private var _owned:Bool = false;
+  private var _ownerId:Int;
 
   private var x = 0;
   private var y = 0;
 
-  public function new( widgetId, owned, canInteract )
+  public function new(widgetId = null, ownerId = null, canInteract = false)
   {
     super();
     _widgetId = widgetId;
+    _ownerId = ownerId;
     _canInteract = canInteract;
-    _owned = owned;
     initialise();
-  }
-
-  public function send( action, data ):Void
-  {
-    return;      
-    var message = {
-    type: "widget",
-    action: action,
-    data: data,
-    widgetId: _widgetId
-    };
-    PubNub.room.send( message );
   }
 
   public function moveTo(X, Y)
@@ -57,23 +45,11 @@ class Widget extends FlxGroup
     // override me
   }
 
-  public function received( object ):Void
+  public function is_owner():Bool
   {
-    if (object.widgetId == _widgetId) 
-    {
-    this.message( object.action, object.data );
+    if (_ownerId == User.me.id) {
+      return true;
     }
+    return false;
   }
-
-  public function message( action:String, data:String )
-  {
-    // override me
-  } 
-
-  /*
-  override public function update():Void
-  {
-      // override me
-  }
-  */
 }

@@ -40,7 +40,7 @@ class Toolbar extends FlxGroup
         tool = cast(t, Tool);
 
         //tool.moveTo(cast(FlxG.width * index/ this.length, Int), FlxG.height-50);
-        tool.moveTo(100, 100);
+        //tool.moveTo(100, 100);
         index++;
       }
     }

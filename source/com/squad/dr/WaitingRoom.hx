@@ -11,15 +11,17 @@ import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
 import org.flixel.FlxU;
-import org.flixel.FlxTextField;
-import nme.text.TextFieldType;
 import com.squad.dr.Keypad;
 
 class WaitingRoom extends FlxState
 {
   private var _keys:Array<Int>;
-  private var _users:Array<Int>;
   private var _frame:Int;
+  private var _announcedMyself:Bool=false;
+  private var _startButton:FlxButton;
+  private var _playersLabel:FlxText;
+  private var _messageLabel:FlxText;
+
   override public function create():Void
     {
       #if !neko
@@ -30,57 +32,54 @@ class WaitingRoom extends FlxState
       FlxG.mouse.show();
 
       //create a button with the label Start and set an on click function
-      var startButton = new FlxButton(0, 0, "Start", onStartClick);
-      add(startButton);
+    _startButton = new FlxButton(240, 320, "START", _onStartClick);
+    _playersLabel = new FlxText(50, 100, 360, "");
+    _playersLabel.size = 16;
+    _messageLabel = new FlxText(50, 150, 360, "Rolling for initiative..." );
+    _messageLabel.size = 16;
+
+    add(_playersLabel);
+    add(_messageLabel);
 
       trace("Welcome to Waiting Room #" + PubNub.room.get_channel());
 
       _keys = new Array<Int>();
-      _listen_enter();
-      _listen_leave();
-      PubNub.room.send({type: "enter", ownerId: User.me.id});
-
-      _users = new Array<Int>();
+    _listen();
 
       _frame = 0;
     }
 
-    private function _listen_enter():Void
+  private function _listen():Void
     {
-      var key = PubNub.room.register({type: "enter"}, function(message) {
+    var key = PubNub.room.register({type: "waitroom"}, function(message) {
+      switch (message.action)
+      {
+        case "enter":
         trace("User #" + message.ownerId + " entered the room." );
-        if (_new_user(message.ownerId)) {
-          _users.push(message.ownerId);
+        if (User.me.hello(message.ownerId)) {
+          User.me.team.push(message.ownerId);
           if (message.ownerId != User.me.id) {
-            PubNub.room.send({type: "enter", ownerId: User.me.id});
+              PubNub.room.send({type: "waitroom", action: "enter", ownerId: User.me.id});
           }
         }
-      });
-      _keys.push(key);
-    }
-
-    private function _new_user(user_id:Int):Bool
-    {
-      for (known_id in _users) {
-        if (user_id == known_id) {
-          return false;
-        }
+        case "leave":
+          trace("User #" + message.ownerId + " left the room." );
+          User.me.team.remove(message.ownerId);
+        case "start":
+          trace("User #" + message.ownerId + " started the game." );
+          _onStart();
       }
-      return true;
-    }
-
-    private function _listen_leave():Void
-    {
-      var key = PubNub.room.register({type: "leave"}, function(message) {
-        trace("User #" + message.ownerId + " left the room." );
-        _users.remove(message.ownerId);
       });
       _keys.push(key);
-      trace( User.getName(User.me.id) );
     }
 
-    //The on click handler for the start button
-    private function onStartClick( ):Void
+  //The on click handler for the start button
+  private function _onStartClick( ):Void
+    {
+    PubNub.room.send({type: "waitroom", action: "start", ownerId: User.me.id});
+    }
+
+  private function _onStart( ):Void
     {
       //Tell Flixel to change the active game state to the actual game
       FlxG.switchState(new Theatre());
@@ -91,7 +90,7 @@ class WaitingRoom extends FlxState
       for (key in _keys) {
         PubNub.room.deregister(key);
       }
-      PubNub.room.send({type: "leave", ownerId: User.me.id});
+    PubNub.room.send({type: "waitroom", action: "leave", ownerId: User.me.id});
       super.destroy();
     }
 
@@ -100,9 +99,46 @@ class WaitingRoom extends FlxState
       PubNub.room.pump();
       _frame++;
       if (_frame > 100) {
-        trace("USERS: " + _users);
-        _frame = 0;
+
+      if (! _announcedMyself )
+      {
+        _announcedMyself = true;
+        PubNub.room.send({type: "waitroom", action: "enter", ownerId: User.me.id});
       }
+
+
+        trace("USERS: " + User.me.team);
+        _frame = 0;
+      User.me.is_boss = (User.me.id == _getBossId());
+      if (User.me.is_boss)
+      {
+        trace( "I'm the boss! \\o/" );
+        add(_startButton);
+        _messageLabel.text = "When everyone is ready hit the button!";
+      }
+      else
+      {
+        trace( "I'm not the boss :(" );
+        remove(_startButton);
+        _messageLabel.text = "Button? Button? Who's got the button?";
+      }
+      if (User.me.team.length > 0)
+      {
+        _playersLabel.text = "Players Ready to rock: " + User.me.team.length;
+      }
+
+    }
       super.update();
     }
+
+  private function _getBossId():Int
+  {
+    var bossId = 0;
+    // max()
+    for ( userId in User.me.team ) {
+      if (userId > bossId)
+        bossId = userId;
+    }
+    return bossId;
+  }
 }

@@ -24,54 +24,50 @@ import com.squad.dr.tools.Syringe;
 class Lobby extends FlxState
 {
 	override public function create():Void
-    {
-      #if !neko
-      FlxG.bgColor = 0xff131c1b;
-      #else
-      FlxG.bgColor = {rgb: 0x131c1b, a: 0xff};
-      #end
-      FlxG.mouse.show();
+  {
+    #if !neko
+    FlxG.bgColor = 0xff131c1b;
+    #else
+    FlxG.bgColor = {rgb: 0x131c1b, a: 0xff};
+    #end
+    FlxG.mouse.show();
 
-      //add the entry keypad
-      var keypad = new Keypad(200, 200, function(room) {
-        PubNub.room.set_channel(room);
-        FlxG.switchState(new WaitingRoom());
-        });
+    //add the entry keypad
+    var keypad = new Keypad(200, 200, function(room) {
+      PubNub.room.set_channel(room);
+      FlxG.switchState(new WaitingRoom());
+      });
 
-      add(keypad);
+    add(keypad);
 
-      trace ("added keypad");
-      trace("Making generator");
-      var g = new Generator( 1, true, true );
-      trace("Adding generator");
-      add(g);
+    trace ("added keypad");
 
-      var tb: Toolbar;
-      //tb = Toolbar.getInstance();
-      //add(tb);
+    //var tb: Toolbar;
+    //tb = Toolbar.getInstance();
+    //add(tb);
 
-      var s = new Scalpel(2, true, true, 400, 400);
-      //tb.addTool(s);
-      var sy = new Syringe(3, true, true, 200, 400, ["Adrenaline", "Ephidrine", "Paradoxamol"]);
-      //tb.addTool(sy);
-      add(s);
-      add(sy);
-    }
+    var s = new Scalpel(2, true, true, 400, 400);
+    //tb.addTool(s);
+    var sy = new Syringe(3, true, true, 200, 400, ["Adrenaline", "Ephidrine", "Paradoxamol"]);
+    //tb.addTool(sy);
+    add(s);
+    add(sy);
+  }
 
-    //The on click handler for the start button
-    private function onStartClick( ):Void
-    {
-      //Tell Flixel to change the active game state to the actual game
-      //FlxG.switchState( new Theatre( ) );
-    }
+  //The on click handler for the start button
+  private function onStartClick( ):Void
+  {
+    //Tell Flixel to change the active game state to the actual game
+    //FlxG.switchState( new Theatre( ) );
+  }
 
-    override public function destroy():Void
-    {
-      super.destroy();
-    }
+  override public function destroy():Void
+  {
+    super.destroy();
+  }
 
-    override public function update():Void
-    {
-      super.update();
-    }
+  override public function update():Void
+  {
+    super.update();
+  }
 }
