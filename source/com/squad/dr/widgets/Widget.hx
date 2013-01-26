@@ -33,7 +33,7 @@ class Widget extends FlxGroup
   public function send( action, data ):Void
   {
     return;      
-    var message:Publishable = {
+    var message = {
     type: "widget",
     action: action,
     data: data,
