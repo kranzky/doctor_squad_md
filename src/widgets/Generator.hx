@@ -1,23 +1,21 @@
 package widgets;
 
-import kranzky.PubNub;
-import widgets.Switch;
-
 import com.haxepunk.Entity;
 import com.haxepunk.graphics.Image;
 import com.haxepunk.utils.Input;
 import com.haxepunk.World;
 import com.haxepunk.HXP;
 
-class Generator
+class Generator extends Widget
 {
 
-  private var _pubnub:PubNub;
   private var _darkness:Entity;
   private var _switch:Switch;
 
-  public function new( pubnub )
+  public function new( pubnub, canInteract )
   {
+    super( pubnub, canInteract );
+
     trace("new generator");
 
     _pubnub = pubnub;
@@ -29,24 +27,23 @@ class Generator
 
     x = HXP.screen.width/2;
     y = HXP.screen.height/2;
-    _switch = new Switch(x, y, switchChanged);
+    _switch = new Switch(x, y, switchChanged, _canInteract);
 
     switchChanged();
   }
 
-  public function update()
+  public override function update()
   {
     // widget state updated here (eg fade out an element)
-
   }
 
-  public function add( world:World ):Void
+  public override function add( world:World ):Void
   {
     world.add(_switch);
     world.add(_darkness);
   }
 
-  public function remove( world:World ):Void
+  public override function remove( world:World ):Void
   {
     world.remove(_switch);
     world.remove(_darkness);

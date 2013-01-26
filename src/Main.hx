@@ -24,7 +24,7 @@ class Main extends Engine
 			HXP.console.enable();
 		}
 #end
-		HXP.screen.color = 0x0000FF;
+		HXP.screen.color = 0x8888FF;
     HXP.screen.scale = 1;
 		HXP.world = new worlds.GameWorld();
 	}

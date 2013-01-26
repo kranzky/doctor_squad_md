@@ -2,6 +2,7 @@ package worlds;
 
 import kranzky.PubNub;
 import widgets.Generator;
+import widgets.Widget;
 
 import haxe.Json;
 
@@ -18,7 +19,7 @@ class GameWorld extends World
   private var _messageImage:Text;
   private var _messageEntity:Entity;
 
-  private var _generator:Generator;
+  private var _widgets:Array<Widget>;
 
   public function new()
   {
@@ -39,13 +40,24 @@ class GameWorld extends World
     var y = HXP.screen.height/2;
     _messageEntity = new Entity(x, y, _messageImage);
 
-    _generator = new Generator(_pubnub);
+    _widgets = new Array<Widget>();
+
+    addWidget( "generator", false );
   }
 
   public override function begin()
   {
     add(_messageEntity);
-    _generator.add(this);
+  }
+
+  public function addWidget( type, mine )
+  {
+    if( type == "generator" )
+    {
+      var generator = new Generator(_pubnub, mine);
+      generator.add( this );
+      _widgets.push( generator );
+    }
   }
 
   public override function update()
@@ -82,5 +94,9 @@ class GameWorld extends World
       var object = Json.parse(message);
     });
     super.update();
+    // Also update widgets (they're not entities)
+    for (widget in _widgets) {
+      widget.update();
+    }
   }
 }

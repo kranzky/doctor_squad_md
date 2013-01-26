@@ -12,12 +12,15 @@ class Switch extends Entity
 {
   public var on:Bool;
   private var _callback:Void -> Void;
+  public var switchable:Bool = false;
 
-  public function new(x, y, callbackFunction)
+  public function new(x, y, callbackFunction, switchable_)
   {
+    trace("swtich instantiated");
     super(x,y);
     trace("new switch");
 
+    switchable = switchable_;
     on = true;
     toggle(); // turn off and setup arts
     setHitbox(45, 45);
@@ -32,28 +35,42 @@ class Switch extends Entity
 
   private function handleInput()
   {
-    if (Input.mouseDown)
-    {
-      // The mouse button is held down.
-    }
     if (Input.mousePressed)
     {
       if (collidePoint(x, y, world.mouseX, world.mouseY))
       {
         trace("tapped inside");
-        toggle();
+        if(switchable) 
+          toggle();
       }
       trace("tapped");
     }
-    if (Input.mouseReleased)
-    {
-     trace("released"); 
-    }
+  }
+
+
+
+  public function turnOn():Void
+  {
+    on = true;
+    updateState();
+  }
+
+  public function turnOff():Void
+  {
+    on = false;
+    updateState();
   }
 
   private function toggle():Void
   {
-    on = ! on;
+    if(on)
+      turnOff();
+    else
+      turnOn();
+  }
+
+  private function updateState():Void
+  {
     if(on) 
     {
       graphic = Image.createRect(45, 45, 0x00FF00);
