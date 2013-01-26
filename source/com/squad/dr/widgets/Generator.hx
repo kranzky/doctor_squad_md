@@ -3,6 +3,7 @@ package com.squad.dr.widgets;
 import org.flixel.FlxSprite;
 import org.flixel.FlxG;
 import org.flixel.FlxButton;
+import org.flixel.plugin.pxText.PxButton;
 
 import com.squad.dr.PubNub;
 import com.squad.dr.widgets.Widget;
@@ -10,7 +11,7 @@ import com.squad.dr.widgets.Widget;
 class Generator extends Widget
 {
     private var _darkness: FlxSprite;
-    private var _button: Button;
+    private var _button: PxButton;
     private var _power:Float = 30.0;
     private var _sendTimer:Float = 1.0;
 
@@ -25,7 +26,10 @@ class Generator extends Widget
         //_darkness.fill(0x000000);
         //_darkness.blend = "screen";
 
-        _button = new Button(x, y, buttonPushed, _canInteract);
+        //_button = new Button(x, y, buttonPushed, _canInteract);
+        _button = new PxButton(x, y, "ksadjhjkdsh", buttonPushed);
+        _button.loadGraphic( "assets/dr/square_button.png", false, false, 45, 45);
+        _button.frameWidth = 20;
         //var bbutton = new FlxButton(x, y, "testing",  buttonPushed);
         _power = 30.0;
         updateState();
