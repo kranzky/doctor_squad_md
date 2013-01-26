@@ -11,6 +11,13 @@ import com.haxepunk.utils.Input;
 import com.haxepunk.graphics.Text;
 import com.haxepunk.Entity;
 
+typedef Publishable = {
+    @:optional var message : String;
+    @:optional var system : String;
+    var counter : Int;
+  }
+
+
 class GameWorld extends World
 {
   private var _counter:Int;
@@ -50,7 +57,7 @@ class GameWorld extends World
 
   public override function update()
   {
-    if (Input.mousePressed && false ) {
+    if (Input.mousePressed) {
       if (_messageImage.text == "Hello") {
         _messageImage.text = "World";
       } else {
@@ -62,12 +69,24 @@ class GameWorld extends World
       // possible to exhaust threads and crash if you spam this. The PubNub
       // class should probably instance a pool of threads for sending and reuse
       // them in a round-robin. But I'm too tired for that right now.
-      var object = {
-        message: "hello",
-        counter: _counter,
-        system: Sys.systemName()
-      };
-      _pubnub.send(object);
+
+      //OLD style - this means every message we publish has to have the same
+      //arguments, otherwise compiler error. Publishable allows optional args.
+//      var object1 = {
+//        message: "hello",
+//        counter: _counter,
+//        system: Sys.systemName()
+//      };
+      var object1: Publishable = { message : "test", system : Sys.systemName(), counter : _counter };
+      _pubnub.send(object1);
+      _counter += 1;
+
+      var object2: Publishable = { system : Sys.systemName(), counter : _counter };
+      _pubnub.send(object2);
+      _counter += 1;
+
+      var object3: Publishable = { counter : _counter };
+      _pubnub.send(object3);
       _counter += 1;
     }
     // Reading requires you give it a callback. This is because it unpicks the
