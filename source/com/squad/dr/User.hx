@@ -3,7 +3,6 @@ package com.squad.dr;
 class User
 {
   public var id:Int;
-  public var name:String;
 
   private static var _is_valid:Bool;
   public static var me(_get_me, null):User;
@@ -55,13 +54,11 @@ class User
       throw "Don't create User directly, silly. Get a room.";
     }
     id = 1000000 + Std.random(1000000);
-    name = getName();
-    trace( "I'm " + name );
   }
 
-  private function getName():String
+  public static function getName( seed ):String
   {
-    name = choose( names );
+    var name:String = choose( names );
     if (Math.random() > 0.7)
       name = "'" + choose( nicknames ) + "' " + name;
     if (Math.random() > 0.4) 
@@ -73,7 +70,7 @@ class User
     return name;
   }
 
-  private function choose( array:Array<String> ) {
+  private static function choose( array:Array<String> ) {
     var i = Std.int(Math.random() * (array.length - 1));
     return array[i];
   }

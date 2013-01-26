@@ -76,6 +76,7 @@ class WaitingRoom extends FlxState
         _users.remove(message.ownerId);
       });
       _keys.push(key);
+      trace( User.getName(User.me.id) );
     }
 
     //The on click handler for the start button
