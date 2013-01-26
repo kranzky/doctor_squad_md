@@ -12,6 +12,10 @@ import org.flixel.FlxState;
 import org.flixel.FlxText;
 import org.flixel.FlxU;
 
+import com.squad.dr.widgets.Widget;
+import com.squad.dr.widgets.Generator;
+
+
 class Lobby extends FlxState
 {
 	override public function create():Void
@@ -24,9 +28,15 @@ class Lobby extends FlxState
       FlxG.mouse.show();
        
       //create a button with the label Start and set an on click function
-      var startButton = new FlxButton(0, 0, "Start", onStartClick);
+      //var startButton = new FlxButton(0, 0, "Start", onStartClick);
       //add the button to the state draw list
-      add(startButton);
+      //add(startButton);
+   
+      trace("Making generator");
+      var g = new Generator( 1, null, true, true );  
+      trace("Adding generator");
+      add(g);  
+        
       
     }
  
