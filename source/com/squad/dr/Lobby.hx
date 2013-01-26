@@ -17,6 +17,7 @@ import com.squad.dr.Keypad;
 
 import com.squad.dr.widgets.Widget;
 import com.squad.dr.widgets.Generator;
+import com.squad.dr.tools.Toolbar;
 import com.squad.dr.tools.Scalpel;
 import com.squad.dr.tools.Syringe;
 
@@ -45,9 +46,15 @@ class Lobby extends FlxState
       trace("Adding generator");
       add(g);
 
+      var tb: Toolbar;
+      //tb = Toolbar.getInstance();
+      //add(tb);
+
       var s = new Scalpel(2, true, true, 400, 400);
-      add(s);
+      //tb.addTool(s);
       var sy = new Syringe(3, true, true, 200, 400, ["Adrenaline", "Ephidrine", "Paradoxamol"]);
+      //tb.addTool(sy);
+      add(s);
       add(sy);
     }
 
