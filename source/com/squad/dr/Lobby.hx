@@ -11,39 +11,50 @@ import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
 import org.flixel.FlxU;
+import org.flixel.FlxTextField;
+import nme.text.TextFieldType;
+import com.squad.dr.Keypad;
 
 import com.squad.dr.widgets.Widget;
 import com.squad.dr.widgets.Generator;
 
-
 class Lobby extends FlxState
 {
   private var _count:Int;
+  private var _observer_key:Int;
 	override public function create():Void
     {
-      //#if !neko
-      //FlxG.bgColor = 0xff131c1b;
-      //#else
-      //FlxG.bgColor = {rgb: 0x131c1b, a: 0xff};
-      //#end
-      //FlxG.bgColor = {rgb: 0x0000ff, a:0xff};
+      #if !neko
       FlxG.bgColor = 0xff131c1b;
+      #else
+      FlxG.bgColor = {rgb: 0x131c1b, a: 0xff};
+      #end       
       FlxG.mouse.show();
-
+       
       _count = 0;
+      _observer_key = PubNub.room.register({type: "world"}, function(message) {
+        trace(message);
+      });
 
       //create a button with the label Start and set an on click function
-      //var startButton = new FlxButton(0, 0, "Start", onStartClick);
+      var startButton = new FlxButton(0, 0, "Start", onStartClick);
       //add the button to the state draw list
+      var keypad = new Keypad(200, 200, function(room) {
+        trace("They selected " + room);
+        });
+
+      add(keypad);
+      
+      trace ("added keypad");
       //add(startButton);
-   
       trace("Making generator");
       var g = new Generator( 1, null, true, true );  
       trace("Adding generator");
       add(g);  
 
+      
     }
-
+ 
     //The on click handler for the start button
     private function onStartClick( ):Void
     {
@@ -53,7 +64,7 @@ class Lobby extends FlxState
         type: "hello",
         data: Sys.systemName(),
         action: "" + _count
-      }
+    }
       var pub_msg_2 = {
         type: "world",
         action: "" + _count
@@ -62,18 +73,16 @@ class Lobby extends FlxState
       PubNub.room.send(pub_msg_2);
       _count += 1;
     }
-
+     
     override public function destroy():Void
     {
+      PubNub.room.deregister(_observer_key);
       super.destroy();
     }
-
+ 
     override public function update():Void
     {
-      PubNub.room.read(function(message) {
-        trace(message);
-      });
-
+      PubNub.room.pump();
       super.update();
     }   
 }

@@ -1,6 +1,7 @@
 package com.squad.dr;
 
 import haxe.Json;
+import haxe.FastList;
 
 import cpp.vm.Thread;
 
@@ -12,11 +13,62 @@ typedef PubMsg = {
   @:optional var widgetId : Int;
 }
 
+class Observer
+{
+  public var key:Int;
+
+  private var _pub_msg:PubMsg;
+  private var _notify:Dynamic;
+
+  private static var _next_key:Int = 0;
+
+  public function new(pub_msg:PubMsg, notify:Dynamic)
+  {
+    key = ++_next_key;
+    _pub_msg = pub_msg;
+    _notify = notify;
+  }
+
+  public function notify(pub_msg:PubMsg)
+  {
+    if (_wants(pub_msg)) {
+      _notify(pub_msg);
+    }
+  }
+
+  private function _wants(pub_msg:PubMsg):Bool
+  {
+    if (_pub_msg.type != null &&
+        pub_msg.type != null &&
+        _pub_msg.type != pub_msg.type) {
+      return false;
+    }
+    if (_pub_msg.action != null &&
+        pub_msg.action != null &&
+        _pub_msg.action != pub_msg.action) {
+      return false;
+    }
+    if (_pub_msg.ownerId != 0 &&
+        pub_msg.ownerId != 0 &&
+        _pub_msg.ownerId != pub_msg.ownerId) {
+      return false;
+    }
+    if (_pub_msg.widgetId != 0 &&
+        pub_msg.widgetId != 0 &&
+        _pub_msg.widgetId != pub_msg.widgetId) {
+      return false;
+    }
+    return true;
+  }
+
+}
+
 class PubNub
 {
   private var _sub_thread:Thread;
   private var _pub_url:String;
   private var _channel:String;
+  private var _observers:FastList<Observer>;
 
   private static var _is_valid:Bool;
   public static var room(_get_a_room, null):PubNub;
@@ -25,13 +77,14 @@ class PubNub
     if (!_is_valid) {
       throw "Don't create PubNub directly, silly. Get a room.";
     }
+    _observers = new FastList<Observer>();
   }
   private static function _get_a_room():PubNub
   {
     if (room == null) {
-        _is_valid = true;
-        room = new PubNub();
-        _is_valid = false;
+      _is_valid = true;
+      room = new PubNub();
+      _is_valid = false;
     }
     return room;
   }
@@ -72,7 +125,7 @@ class PubNub
   // The complexity here is that the message we read may be a comma-separated
   // list of objects, but we want to notify one object at a time, plus the fact
   // that the read queue may require multiple reads to empty.
-  public function read(notify):Void
+  public function pump():Void
   {
     if (_channel == null) {
       throw "Set the channel first.";
@@ -82,10 +135,10 @@ class PubNub
     while (message != null) {
       while(true) {
           if (regex_content.match(message)) {
-            notify(regex_content.matched(1));
+            _notify_observers(regex_content.matched(1));
             message = regex_content.matched(2);
           } else {
-            notify(message);
+            _notify_observers(message);
             break;
           }
         }
@@ -93,18 +146,42 @@ class PubNub
     }
   }
 
+  public function register(pub_msg:PubMsg, notify):Int
+  {
+    var observer = new Observer(pub_msg, notify);
+    _observers.add(observer);
+    return observer.key;
+  }
+
+  public function deregister(key:Int):Void
+  {
+    for (observer in _observers) {
+      if (key == observer.key) {
+        _observers.remove(observer);
+      }
+    }
+  }
+
+  private function _notify_observers(message:String):Void
+  {
+    var pub_msg:PubMsg = Json.parse(message);
+    for (observer in _observers) {
+      observer.notify(pub_msg);
+    }
+  }
+
   static private function _create_publisher(base):Thread
   {
     var thread = Thread.create(function():Void {
       var base = Thread.readMessage(true);
-      var sub_msg = Thread.readMessage(true);
-      var url = base + Json.stringify(sub_msg);
+      var pub_msg:PubMsg = Thread.readMessage(true);
+      var url = base + Json.stringify(pub_msg);
       var client = new haxe.Http(url);
       var success = false;
       client.setHeader('Accept', 'application/json');
       client.noShutdown = true;
       client.onError = function(error) {
-        trace("PUB ERROR : " + Std.string(error) + " : " + sub_msg);
+        trace("PUB ERROR : " + Std.string(error) + " : " + pub_msg);
         success = false;
       };
       client.onData = function(data) {
