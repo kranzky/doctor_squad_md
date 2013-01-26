@@ -4,7 +4,7 @@ import haxe.Json;
 
 import cpp.vm.Thread;
 
-typedef Publishable = {
+typedef PubMsg = {
   @:optional var type : String;
   @:optional var action : String;
   @:optional var data : String;
@@ -16,13 +16,41 @@ class PubNub
 {
   private var _sub_thread:Thread;
   private var _pub_url:String;
+  private var _channel:String;
+
+  private static var _is_valid:Bool;
+  public static var room(_get_a_room, null):PubNub;
+  public function new():Void
+  {
+    if (!_is_valid) {
+      throw "Don't create PubNub directly, silly. Get a room.";
+    }
+  }
+  private static function _get_a_room():PubNub
+  {
+    if (room == null) {
+        _is_valid = true;
+        room = new PubNub();
+        _is_valid = false;
+    }
+    return room;
+  }
+
+  public function get_channel():String
+  {
+    return _channel;
+  }
 
   // ref: http://www.pubnub.com/tutorial/http-rest-push-api
-  public function new(pub_key, sub_key, channel)
+  public function set_channel(channel)
   {
     var service = "http://pubsub.pubnub.com";
+    var pub_key = "pub-c-0834dc19-81c6-4378-9ab7-db3d457d9472";
+    var sub_key = "sub-c-132a21ec-66ec-11e2-903d-12313f022c90";
+
     _sub_thread = _create_subscriber(service+"/subscribe/"+sub_key+"/"+channel+"/0/");
     _pub_url = service+"/publish/"+pub_key+"/"+sub_key+"/0/"+channel+"/0/";
+    _channel = channel;
   }
 
   // TODO: sending spawns a new thread. This is because a single thread can't
@@ -30,19 +58,25 @@ class PubNub
   // up significantly, which causes a massive delay. Brad saw this last night
   // just before we left. It's fixed now, but rather than creating a new thread
   // each call, we should round-robin to a thread pool.
-  public function send(object):Void
+  public function send(pub_msg:PubMsg):Void
   {
+    if (_channel == null) {
+      throw "Set the channel first.";
+    }
     var pub_thread = _create_publisher(_pub_url);
-    pub_thread.sendMessage(object);
+    pub_thread.sendMessage(pub_msg);
   }
 
-  // TODO: we should padd a Json object back to notify instead of a string, but
+  // TODO: we should pass a Json object back to notify instead of a string, but
   // I don't know how to specify the method signature for the notify function.
   // The complexity here is that the message we read may be a comma-separated
   // list of objects, but we want to notify one object at a time, plus the fact
   // that the read queue may require multiple reads to empty.
   public function read(notify):Void
   {
+    if (_channel == null) {
+      throw "Set the channel first.";
+    }
     var regex_content = ~/^(\{.*?\}),(.*)$/;
     var message = Thread.readMessage(false);
     while (message != null) {
@@ -63,18 +97,22 @@ class PubNub
   {
     var thread = Thread.create(function():Void {
       var base = Thread.readMessage(true);
-      var object = Thread.readMessage(true);
-      var url = base + Json.stringify(object);
+      var sub_msg = Thread.readMessage(true);
+      var url = base + Json.stringify(sub_msg);
       var client = new haxe.Http(url);
+      var success = false;
       client.setHeader('Accept', 'application/json');
       client.noShutdown = true;
       client.onError = function(error) {
-        trace("PUB ERROR : " + Std.string(error));
+        trace("PUB ERROR : " + Std.string(error) + " : " + sub_msg);
+        success = false;
       };
       client.onData = function(data) {
-        // NOOP
+        success = true;
       };
-      client.request(false);
+      while (!success) {
+        client.request(false);
+      }
     });
     thread.sendMessage(base);
     return thread;
