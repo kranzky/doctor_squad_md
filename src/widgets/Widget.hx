@@ -8,23 +8,37 @@ class Widget
 
   public var _canInteract:Bool;
   private var _pubnub:PubNub;
+  private var _widgetId:Int;
 
-  public function new( pubnub, canInteract )
+  public function new( widgetId, pubnub, canInteract )
   {
     _canInteract = canInteract;
     _pubnub = pubnub;
+    initialise();
   }
 
   public function send( message ):Void
   {
-    //_pubnub.send( message );
+    _pubnub.send( message );
   }
 
-
-  public function received( message ):Void
+  public function initialise():Void
   {
     // override me
   }
+
+  public function received( object ):Void
+  {
+    if (object.widgetId == _widgetId) 
+    {
+      this.message( object.action, object.data );
+    }
+  }
+
+  public function message( action:String, data:String )
+  {
+    // override me
+  } 
 
   public function add( world:World ):Void
   {

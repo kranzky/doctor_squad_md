@@ -22,9 +22,9 @@ class Switch extends Entity
 
     switchable = switchable_;
     on = true;
-    toggle(); // turn off and setup arts
     setHitbox(45, 45);
     _callback = callbackFunction;
+    updateState(); // turn off and setup arts
   }
 
   public override function update()
@@ -39,11 +39,9 @@ class Switch extends Entity
     {
       if (collidePoint(x, y, world.mouseX, world.mouseY))
       {
-        trace("tapped inside");
         if(switchable) 
-          toggle();
+          _toggle();
       }
-      trace("tapped");
     }
   }
 
@@ -59,12 +57,26 @@ class Switch extends Entity
     updateState();
   }
 
-  private function toggle():Void
+  private function _turnedOn():Void
+  {
+    on = true;
+    updateState();
+    if (_callback != null) _callback();
+  }
+
+  public function _turnedOff():Void
+  {
+    on = false;
+    updateState();
+    if (_callback != null) _callback();
+  }
+
+  public function _toggle():Void
   {
     if(on)
-      turnOff();
+      _turnedOff();
     else
-      turnOn();
+      _turnedOn();
   }
 
   private function updateState():Void
@@ -75,6 +87,5 @@ class Switch extends Entity
     } else {
       graphic = Image.createRect(45, 45, 0xFF0000);
     }
-    if (_callback != null) _callback();
   }
 }

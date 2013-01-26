@@ -21,6 +21,7 @@ class GameWorld extends World
 
   private var _widgets:Array<Widget>;
   private var _id:Int;
+  private var _readyTimer:Float = 0;
 
   private var _gameMaster:Bool = true;
 
@@ -51,28 +52,32 @@ class GameWorld extends World
   public override function begin()
   {
     add(_messageEntity);
+    _readyTimer = 1.0;
+  }
+
+  public function ready():Void
+  {
     if (_gameMaster)
       spawnWidget( "generator", _id );
   }
 
   public function spawnWidget( type, ownerId )
   {
+    var widgetId:Int = Std.int( Math.random() * 65535 );
     var spawnMsg:Publishable = {
-      action: "spawn",
-      type: "generator",
-      ownerId: ownerId
+      type: "spawn",
+      data: "generator",
+      ownerId: ownerId,
+      widgetId: widgetId
     }
     _pubnub.send(spawnMsg);
   }
 
-  private function addWidget( type, ownerId )
+  private function addWidget( type, ownerId, widgetId )
   {
     if( type == "generator" )
     {
-      trace("spawn");
-      trace(_id);
-      trace(ownerId);
-      var generator = new Generator(_pubnub, (ownerId == _id) );
+      var generator = new Generator( widgetId, _pubnub, (ownerId == _id) );
       generator.add( this );
       _widgets.push( generator );
     }
@@ -80,6 +85,17 @@ class GameWorld extends World
 
   public override function update()
   {
+
+    if (_readyTimer < 0)
+    {
+      ready();
+      _readyTimer = 0;
+    }
+    else if (_readyTimer > 0)
+    {
+      _readyTimer -= HXP.elapsed;
+    }
+
     if (Input.mousePressed && false) {
       if (_messageImage.text == "Hello") {
         _messageImage.text = "World";
@@ -105,12 +121,18 @@ class GameWorld extends World
       trace("READ: " + message);
       var object = Json.parse(message);
 
-      if (object.action == "spawn")
+      if (object.type == "spawn")
       {
-        addWidget( object.type, object.ownerId );
+        addWidget( object.data, object.ownerId, object.widgetId );
+      } 
+      else if (object.type == "widget")
+      {
+        for (widget in _widgets) {
+          widget.received( object );
+        }
       }
-
     });
+
     super.update();
     // Also update widgets (they're not entities)
     for (widget in _widgets) {

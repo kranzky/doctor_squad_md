@@ -5,9 +5,11 @@ import haxe.Json;
 import cpp.vm.Thread;
 
 typedef Publishable = {
-  @:optional var action : String;
   @:optional var type : String;
+  @:optional var action : String;
+  @:optional var data : String;
   @:optional var ownerId : Int;
+  @:optional var widgetId : Int;
 }
 
 class PubNub

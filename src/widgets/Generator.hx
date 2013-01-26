@@ -1,5 +1,6 @@
 package widgets;
 
+import kranzky.PubNub;
 import com.haxepunk.Entity;
 import com.haxepunk.graphics.Image;
 import com.haxepunk.utils.Input;
@@ -12,14 +13,9 @@ class Generator extends Widget
   private var _darkness:Entity;
   private var _switch:Switch;
 
-  public function new( pubnub, canInteract )
+  public override function initialise():Void
   {
-    super( pubnub, canInteract );
-
     trace("new generator");
-
-    _pubnub = pubnub;
-
     var _darknessImage = Image.createRect(HXP.screen.width, HXP.screen.height, 0x000000);
     var x = 0.0;
     var y = 0.0;
@@ -28,8 +24,21 @@ class Generator extends Widget
     x = HXP.screen.width/2;
     y = HXP.screen.height/2;
     _switch = new Switch(x, y, switchChanged, _canInteract);
+    updateState();
+  }
 
-    switchChanged();
+  public override function message(action:String, data:String)
+  {
+    trace("Generator recieved message");
+    if (action == "switch")
+    {
+      if (data == "on") {
+        _switch.turnOn();
+      } else {
+        _switch.turnOff();
+      }
+    }
+    updateState();
   }
 
   public override function update()
@@ -51,7 +60,20 @@ class Generator extends Widget
 
   private function switchChanged():Void
   {
-    trace("switch changed");
+    trace("we clicked switch");
+
+    // send msg
+    var msg:Publishable = {
+      type: "widget",
+      action: "switch",
+      data: _switch.on ? "on" : "off",
+      widgetId: _widgetId
+    }
+    this.send( msg );
+  }
+
+  private function updateState():Void
+  {
     if(_switch.on) 
     {
       cast(_darkness.graphic, Image).alpha = 0.1;
