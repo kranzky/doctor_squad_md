@@ -4,6 +4,8 @@ class User
 {
   public var id:Int;
   public var is_boss:Bool=false;
+  public var name:String;
+  public var team:Array<Int>;
 
   private static var _is_valid:Bool;
   public static var me(_get_me, null):User;
@@ -54,6 +56,7 @@ class User
     if (!_is_valid) {
       throw "Don't create User directly, silly. Get a room.";
     }
+    team = new Array<Int>();
     id = 1000000 + Std.random(1000000);
   }
 
@@ -84,5 +87,15 @@ class User
       _is_valid = false;
     }
     return me;
+  }
+
+  public function hello(user_id:Int):Bool
+  {
+    for (known_id in team) {
+      if (user_id == known_id) {
+        return false;
+      }
+    }
+    return true;
   }
 }

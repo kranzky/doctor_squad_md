@@ -16,7 +16,6 @@ import com.squad.dr.Keypad;
 class WaitingRoom extends FlxState
 {
   private var _keys:Array<Int>;
-  private var _users:Array<Int>;
   private var _frame:Int;
   private var _announcedMyself:Bool=false;
   private var _startButton:FlxButton;
@@ -24,15 +23,15 @@ class WaitingRoom extends FlxState
   private var _messageLabel:FlxText;
 
   override public function create():Void
-  {
-    #if !neko
-    FlxG.bgColor = 0xff131c1b;
-    #else
-    FlxG.bgColor = {rgb: 0x131c1b, a: 0xff};
-    #end
-    FlxG.mouse.show();
+    {
+      #if !neko
+      FlxG.bgColor = 0xff131c1b;
+      #else
+      FlxG.bgColor = {rgb: 0x131c1b, a: 0xff};
+      #end
+      FlxG.mouse.show();
 
-    //create a button with the label Start and set an on click function
+      //create a button with the label Start and set an on click function
     _startButton = new FlxButton(240, 320, "START", _onStartClick);
     _playersLabel = new FlxText(50, 100, 360, "");
     _playersLabel.size = 16;
@@ -42,76 +41,64 @@ class WaitingRoom extends FlxState
     add(_playersLabel);
     add(_messageLabel);
 
-    trace("Welcome to Waiting Room #" + PubNub.room.get_channel());
+      trace("Welcome to Waiting Room #" + PubNub.room.get_channel());
 
-    _keys = new Array<Int>();
+      _keys = new Array<Int>();
     _listen();
 
-    _users = new Array<Int>();
-
-    _frame = 0;
-  }
+      _frame = 0;
+    }
 
   private function _listen():Void
-  {
+    {
     var key = PubNub.room.register({type: "waitroom"}, function(message) {
       switch (message.action)
       {
         case "enter":
-          trace("User #" + message.ownerId + " entered the room." );
-          if (_new_user(message.ownerId)) {
-            _users.push(message.ownerId);
-            if (message.ownerId != User.me.id) {
+        trace("User #" + message.ownerId + " entered the room." );
+        if (User.me.hello(message.ownerId)) {
+          User.me.team.push(message.ownerId);
+          if (message.ownerId != User.me.id) {
               PubNub.room.send({type: "waitroom", action: "enter", ownerId: User.me.id});
-            }
           }
+        }
         case "leave":
           trace("User #" + message.ownerId + " left the room." );
-          _users.remove(message.ownerId);
+          User.me.team.remove(message.ownerId);
         case "start":
           trace("User #" + message.ownerId + " started the game." );
           _onStart();
       }
-    });
-    _keys.push(key);
-  }
-
-  private function _new_user(user_id:Int):Bool
-  {
-    for (known_id in _users) {
-      if (user_id == known_id) {
-        return false;
-      }
+      });
+      _keys.push(key);
     }
-    return true;
-  }
 
   //The on click handler for the start button
   private function _onStartClick( ):Void
-  {
+    {
     PubNub.room.send({type: "waitroom", action: "start", ownerId: User.me.id});
-  }
+    }
 
   private function _onStart( ):Void
-  {
-    //Tell Flixel to change the active game state to the actual game
-    FlxG.switchState(new Theatre());
-  }
-
-  override public function destroy():Void
-  {
-    for (key in _keys) {
-      PubNub.room.deregister(key);
+    {
+      //Tell Flixel to change the active game state to the actual game
+      FlxG.switchState(new Theatre());
     }
-    PubNub.room.send({type: "waitroom", action: "leave", ownerId: User.me.id});
-    super.destroy();
-  }
 
-  override public function update():Void
-  {
-    PubNub.room.pump();
-    _frame++;
-    if (_frame > 100) {
+    override public function destroy():Void
+    {
+      for (key in _keys) {
+        PubNub.room.deregister(key);
+      }
+    PubNub.room.send({type: "waitroom", action: "leave", ownerId: User.me.id});
+      super.destroy();
+    }
+
+    override public function update():Void
+    {
+      PubNub.room.pump();
+      _frame++;
+      if (_frame > 100) {
 
       if (! _announcedMyself )
       {
@@ -120,8 +107,8 @@ class WaitingRoom extends FlxState
       }
 
 
-      trace("USERS: " + _users);
-      _frame = 0;
+        trace("USERS: " + User.me.team);
+        _frame = 0;
       User.me.is_boss = (User.me.id == _getBossId());
       if (User.me.is_boss)
       {
@@ -135,20 +122,20 @@ class WaitingRoom extends FlxState
         remove(_startButton);
         _messageLabel.text = "Button? Button? Who's got the button?";
       }
-      if (_users.length > 0)
+      if (User.me.team.length > 0)
       {
-        _playersLabel.text = "Players Ready to rock: " + _users.length;
+        _playersLabel.text = "Players Ready to rock: " + User.me.team.length;
       }
 
     }
-    super.update();
-  }
+      super.update();
+    }
 
-  private function _getBossId():Int 
+  private function _getBossId():Int
   {
-    var bossId = 0; 
+    var bossId = 0;
     // max()
-    for ( userId in _users ) {
+    for ( userId in User.me.team ) {
       if (userId > bossId)
         bossId = userId;
     }

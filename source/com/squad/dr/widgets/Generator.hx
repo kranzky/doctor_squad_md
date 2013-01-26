@@ -5,7 +5,6 @@ import org.flixel.FlxG;
 import org.flixel.FlxButton;
 import org.flixel.plugin.pxText.PxButton;
 
-import com.squad.dr.PubNub;
 import com.squad.dr.widgets.Widget;
 
 class Generator extends Widget
@@ -15,12 +14,11 @@ class Generator extends Widget
     private var _power:Float = 30.0;
     private var _sendTimer:Float = 1.0;
 
-    public function new ( widgetId, owned, canInteract )
+    public override function initialise()
     {
         trace("new generator");
         var x = 100;
         var y = 100;
-        super( widgetId, owned, canInteract );
         _darkness = new FlxSprite(0, 0);
         _darkness.makeGraphic(FlxG.width, FlxG.height, 0xff000000); //colours are ARGB
         //_darkness.fill(0x0000ff);
@@ -32,16 +30,22 @@ class Generator extends Widget
         add(_darkness);
         add(_button);
         updateState();
+
+        PubNub.room.register({widgetId: _widgetId}, function(message) {
+            switch(message.action) {
+                case "power":
+                    _updatePower(Std.parseFloat(message.data));
+            }
+        });
     }
 
-    public override function message(action:String, data:String)
+    private function _updatePower(power):Void
     {
-        if (action == "power" && ! _owned)
-        {
-        _power = Std.parseFloat(data);
-        trace("Generator recieved power " +_power);
-
+        if (!is_owner()) {
+            return;
         }
+        _power = power;
+        trace("Generator received power " + _power);
         updateState();
     }
 
@@ -50,27 +54,27 @@ class Generator extends Widget
         super.update();
         if (_power > 0)
         {
-        _power = _power - (FlxG.elapsed*2);
-        if (_power < 0)
-            _power = 0.0;
+            _power = _power - (FlxG.elapsed*2);
+            if (_power < 0)
+            {
+                _power = 0.0;
+            }
+            if (is_owner()) {
+                _sendTimer -= FlxG.elapsed;
+                if(_sendTimer < 0.0)
+                {
+                    _sendTimer += 1.0;
+                    _sendPowerLevel();
+                }
+            }
+            updateState();
         }
-        if (_owned)
-        {
-        _sendTimer -= FlxG.elapsed;
-        if(_sendTimer < 0.0)
-        {
-            _sendTimer += 1.0;
-            _sendPowerLevel();
-        }
-        }
-        updateState();
     }
 
     private function _sendPowerLevel( )
     {
-
         trace("Sending power " + _power);
-        send( "power", "" + _power );
+        //send( "power", "" + _power );
         updateState();
     }
 

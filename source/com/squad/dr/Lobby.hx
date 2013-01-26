@@ -39,11 +39,6 @@ class Lobby extends FlxState
 
       add(keypad);
       trace ("added keypad");
-      
-      // trace("Making generator");
-      // var g = new Generator( 1, true, true );
-      // trace("Adding generator");
-      // add(g);
 
       var s = new Scalpel(2, true, true, 400, 400);
       add(s);
