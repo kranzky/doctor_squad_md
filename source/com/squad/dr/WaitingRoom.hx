@@ -37,6 +37,7 @@ class WaitingRoom extends FlxState
         trace("User #" + message.ownerId + " entered the room." );
       });
       PubNub.room.send({type: "enter", ownerId: User.me.id});
+      trace( User.getName(User.me.id) );
     }
 
     //The on click handler for the start button
