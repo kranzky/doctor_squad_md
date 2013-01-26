@@ -15,6 +15,7 @@ import org.flixel.FlxU;
 class Lobby extends FlxState
 {
   private var _count:Int;
+  private var _observer_key:Int;
 	override public function create():Void
     {
       #if !neko
@@ -25,6 +26,9 @@ class Lobby extends FlxState
       FlxG.mouse.show();
 
       _count = 0;
+      _observer_key = PubNub.room.register({}, function(message) {
+        trace(message);
+      });
 
       //create a button with the label Start and set an on click function
       var startButton = new FlxButton(0, 0, "Start", onStartClick);
@@ -54,15 +58,13 @@ class Lobby extends FlxState
 
     override public function destroy():Void
     {
+      PubNub.room.deregister(_observer_key);
       super.destroy();
     }
 
     override public function update():Void
     {
-      PubNub.room.read(function(message) {
-        trace(message);
-      });
-
+      PubNub.room.pump();
       super.update();
     }
 }
