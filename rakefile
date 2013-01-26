@@ -1,0 +1,13 @@
+task :default => [:mac]
+
+task :android do
+  exec("nme test drsquad.nmml android -debug")
+end
+
+task :mac do
+  exec("nme test drsquad.nmml mac -debug")
+end
+
+task :flash do
+  exec("nme test drsquad.nmml flash -debug")
+end
