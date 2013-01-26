@@ -17,6 +17,7 @@ import com.squad.dr.Keypad;
 
 import com.squad.dr.widgets.Widget;
 import com.squad.dr.widgets.Generator;
+import com.squad.dr.tools.Scalpel;
 
 class Lobby extends FlxState
 {
@@ -42,6 +43,9 @@ class Lobby extends FlxState
       var g = new Generator( 1, true, true );
       trace("Adding generator");
       add(g);
+
+      var s = new Scalpel(1, true, true, 400, 400);
+      add(s);
     }
 
     //The on click handler for the start button

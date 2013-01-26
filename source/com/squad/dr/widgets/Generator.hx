@@ -26,7 +26,7 @@ class Generator extends Widget
         //_darkness.fill(0x0000ff);
         _darkness.blend = nme.display.BlendMode.SCREEN;
 
-        _button = new Button(x, y, buttonPushed, _canInteract);
+        _button = new Button(x, y, "Generator", buttonPushed, _canInteract);
         _button.loadGraphic( "assets/dr/square_button.png", false, false, 45, 45);
         _power = 30.0;
         add(_darkness);
@@ -74,7 +74,7 @@ class Generator extends Widget
         updateState();
     }
 
-    private function buttonPushed():Void
+    public function buttonPushed():Void
     {
         trace("Added power");
         _power += 1.0;

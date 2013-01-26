@@ -8,10 +8,10 @@ class Button extends FlxButton
   private var _buttoncallback:Void -> Void;
   public var usable:Bool = false;
 
-  public function new(x, y, callbackFunction, usable_)
+  public function new(x, y, labeltext, callbackFunction, usable_)
   {
     trace("button instantiated");
-    super(x, y, "Yo Brother", _pushed);
+    super(x, y, labeltext, _pushed);
     
     trace("new button");
 
