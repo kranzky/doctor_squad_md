@@ -16,7 +16,7 @@ class Switch extends Entity
 
   public function new(x, y, callbackFunction, switchable_)
   {
-    trace("swtich instantiated");
+    trace("switch instantiated");
     super(x,y);
     trace("new switch");
 
@@ -46,8 +46,6 @@ class Switch extends Entity
       trace("tapped");
     }
   }
-
-
 
   public function turnOn():Void
   {

@@ -12,13 +12,6 @@ import com.haxepunk.utils.Input;
 import com.haxepunk.graphics.Text;
 import com.haxepunk.Entity;
 
-typedef Publishable = {
-    @:optional var message : String;
-    @:optional var system : String;
-    var counter : Int;
-  }
-
-
 class GameWorld extends World
 {
   private var _counter:Int;
@@ -27,10 +20,15 @@ class GameWorld extends World
   private var _messageEntity:Entity;
 
   private var _widgets:Array<Widget>;
+  private var _id:Int;
+
+  private var _gameMaster:Bool = true;
 
   public function new()
   {
     super();
+
+    _id = Std.int(Math.random()*65536);
 
     _counter = 1;
 
@@ -48,20 +46,33 @@ class GameWorld extends World
     _messageEntity = new Entity(x, y, _messageImage);
 
     _widgets = new Array<Widget>();
-
-    addWidget( "generator", false );
   }
 
   public override function begin()
   {
     add(_messageEntity);
+    if (_gameMaster)
+      spawnWidget( "generator", _id );
   }
 
-  public function addWidget( type, mine )
+  public function spawnWidget( type, ownerId )
+  {
+    var spawnMsg:Publishable = {
+      action: "spawn",
+      type: "generator",
+      ownerId: ownerId
+    }
+    _pubnub.send(spawnMsg);
+  }
+
+  private function addWidget( type, ownerId )
   {
     if( type == "generator" )
     {
-      var generator = new Generator(_pubnub, mine);
+      trace("spawn");
+      trace(_id);
+      trace(ownerId);
+      var generator = new Generator(_pubnub, (ownerId == _id) );
       generator.add( this );
       _widgets.push( generator );
     }
@@ -69,7 +80,7 @@ class GameWorld extends World
 
   public override function update()
   {
-    if (Input.mousePressed) {
+    if (Input.mousePressed && false) {
       if (_messageImage.text == "Hello") {
         _messageImage.text = "World";
       } else {
@@ -82,24 +93,6 @@ class GameWorld extends World
       // class should probably instance a pool of threads for sending and reuse
       // them in a round-robin. But I'm too tired for that right now.
 
-      //OLD style - this means every message we publish has to have the same
-      //arguments, otherwise compiler error. Publishable allows optional args.
-//      var object1 = {
-//        message: "hello",
-//        counter: _counter,
-//        system: Sys.systemName()
-//      };
-      var object1: Publishable = { message : "test", system : Sys.systemName(), counter : _counter };
-      _pubnub.send(object1);
-      _counter += 1;
-
-      var object2: Publishable = { system : Sys.systemName(), counter : _counter };
-      _pubnub.send(object2);
-      _counter += 1;
-
-      var object3: Publishable = { counter : _counter };
-      _pubnub.send(object3);
-      _counter += 1;
     }
     // Reading requires you give it a callback. This is because it unpicks the
     // array of results returned, so one call to read may hit the callback
@@ -111,6 +104,12 @@ class GameWorld extends World
     _pubnub.read(function(message) {
       trace("READ: " + message);
       var object = Json.parse(message);
+
+      if (object.action == "spawn")
+      {
+        addWidget( object.type, object.ownerId );
+      }
+
     });
     super.update();
     // Also update widgets (they're not entities)

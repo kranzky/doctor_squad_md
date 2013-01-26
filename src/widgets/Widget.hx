@@ -6,7 +6,7 @@ import kranzky.PubNub;
 class Widget
 {
 
-  private var _canInteract:Bool;
+  public var _canInteract:Bool;
   private var _pubnub:PubNub;
 
   public function new( pubnub, canInteract )

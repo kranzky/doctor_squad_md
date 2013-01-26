@@ -4,6 +4,12 @@ import haxe.Json;
 
 import cpp.vm.Thread;
 
+typedef Publishable = {
+  @:optional var action : String;
+  @:optional var type : String;
+  @:optional var ownerId : Int;
+}
+
 class PubNub
 {
   private var _sub_thread:Thread;
