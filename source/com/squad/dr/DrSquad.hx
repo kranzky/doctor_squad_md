@@ -15,6 +15,5 @@ class DrSquad extends FlxGame
     var ratio:Float = Math.min(ratioX, ratioY);
     super(Math.floor(stageWidth / ratio), Math.floor(stageHeight / ratio), Lobby, ratio, 30, 30);
     forceDebugger = true;
-    PubNub.room.set_channel("kranzky");
   }
 }
