@@ -9,8 +9,8 @@ typedef PubMsg = {
   @:optional var type : String;
   @:optional var action : String;
   @:optional var data : String;
-  @:optional var ownerId : Int;
-  @:optional var widgetId : Int;
+  @:optional var ownerId : Null<Int>;
+  @:optional var widgetId : Null<Int>;
 }
 
 class Observer
@@ -18,18 +18,18 @@ class Observer
   public var key:Int;
 
   private var _pub_msg:PubMsg;
-  private var _notify:Dynamic;
+  private var _notify:(PubMsg -> Void);
 
   private static var _next_key:Int = 0;
 
-  public function new(pub_msg:PubMsg, notify:Dynamic)
+  public function new(pub_msg:PubMsg, notify:(PubMsg -> Void))
   {
     key = ++_next_key;
     _pub_msg = pub_msg;
     _notify = notify;
   }
 
-  public function notify(pub_msg:PubMsg)
+  public function notify(pub_msg:PubMsg):Void
   {
     if (_wants(pub_msg)) {
       _notify(pub_msg);
@@ -48,13 +48,13 @@ class Observer
         _pub_msg.action != pub_msg.action) {
       return false;
     }
-    if (_pub_msg.ownerId != 0 &&
-        pub_msg.ownerId != 0 &&
+    if (_pub_msg.ownerId != null &&
+        pub_msg.ownerId != null &&
         _pub_msg.ownerId != pub_msg.ownerId) {
       return false;
     }
-    if (_pub_msg.widgetId != 0 &&
-        pub_msg.widgetId != 0 &&
+    if (_pub_msg.widgetId != null &&
+        pub_msg.widgetId != null &&
         _pub_msg.widgetId != pub_msg.widgetId) {
       return false;
     }
