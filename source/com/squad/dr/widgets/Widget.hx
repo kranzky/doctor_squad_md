@@ -1,14 +1,5 @@
 package com.squad.dr.widgets;
 
-/*
-import org.flixel.FlxButton;
-import org.flixel.FlxG;
-import org.flixel.FlxPath;
-import org.flixel.FlxSave;
-import org.flixel.FlxSprite;
-import org.flixel.FlxState;
-import org.flixel.FlxText;
-import org.flixel.FlxU;*/
 import org.flixel.FlxGroup;
 import com.squad.dr.PubNub;
 

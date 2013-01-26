@@ -53,9 +53,7 @@ class Keypad extends FlxGroup
             }
           }
         });
-      //button.label.size = 14;
       button.loadGraphic( "assets/dr/square_button.png", false, false, 45, 45);
-      button.frameWidth = 20;
       add(button);
     }
 

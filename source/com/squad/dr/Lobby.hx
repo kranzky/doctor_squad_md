@@ -36,9 +36,7 @@ class Lobby extends FlxState
         trace(message);
       });
 
-      //create a button with the label Start and set an on click function
-      var startButton = new FlxButton(0, 0, "Start", onStartClick);
-      //add the button to the state draw list
+      //add the entry keypad
       var keypad = new Keypad(200, 200, function(room) {
         trace("They selected " + room);
         });
@@ -46,7 +44,6 @@ class Lobby extends FlxState
       add(keypad);
       
       trace ("added keypad");
-      //add(startButton);
       trace("Making generator");
       var g = new Generator( 1, null, true, true );  
       trace("Adding generator");
