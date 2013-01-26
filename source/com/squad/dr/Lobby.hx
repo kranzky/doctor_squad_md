@@ -26,7 +26,7 @@ class Lobby extends FlxState
       FlxG.mouse.show();
 
       _count = 0;
-      _observer_key = PubNub.room.register({}, function(message) {
+      _observer_key = PubNub.room.register({type: "world"}, function(message) {
         trace(message);
       });
 

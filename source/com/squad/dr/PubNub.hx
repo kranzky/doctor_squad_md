@@ -174,14 +174,14 @@ class PubNub
   {
     var thread = Thread.create(function():Void {
       var base = Thread.readMessage(true);
-      var sub_msg = Thread.readMessage(true);
-      var url = base + Json.stringify(sub_msg);
+      var pub_msg:PubMsg = Thread.readMessage(true);
+      var url = base + Json.stringify(pub_msg);
       var client = new haxe.Http(url);
       var success = false;
       client.setHeader('Accept', 'application/json');
       client.noShutdown = true;
       client.onError = function(error) {
-        trace("PUB ERROR : " + Std.string(error) + " : " + sub_msg);
+        trace("PUB ERROR : " + Std.string(error) + " : " + pub_msg);
         success = false;
       };
       client.onData = function(data) {
