@@ -13,6 +13,7 @@ class Generator extends Widget
     private var _button: Button;
     private var _power:Float = 30.0;
     private var _sendTimer:Float = 1.0;
+    private var _listen_key:Int = 0;
 
     public override function initialise(attributes:Dynamic)
     {
@@ -30,16 +31,11 @@ class Generator extends Widget
         {
           add(_button);
         }
-        
+
         add(_darkness);
         updateState();
 
-        PubNub.room.register({widgetId: _widgetId}, function(message) {
-            switch(message.action) {
-                case "power":
-                    _updatePower(Std.parseFloat(message.data));
-            }
-        });
+        _listen_key = PubNub.room.register({widgetId: _widgetId});
     }
 
     private function _updatePower(power):Void
@@ -54,6 +50,12 @@ class Generator extends Widget
     public override function update()
     {
         super.update();
+        PubNub.room.consume(_listen_key, function(message) {
+            switch(message.action) {
+                case "power":
+                    _updatePower(Std.parseFloat(message.data));
+            }
+        });
         if (_power > 0)
         {
             _power = _power - (FlxG.elapsed*2);
@@ -71,6 +73,12 @@ class Generator extends Widget
             }
             updateState();
         }
+    }
+
+    public override function destroy()
+    {
+        PubNub.room.deregister(_listen_key);
+        super.destroy();
     }
 
     private function _sendPowerLevel( )

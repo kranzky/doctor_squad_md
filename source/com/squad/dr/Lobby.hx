@@ -54,7 +54,6 @@ class Lobby extends FlxState
 
     override public function destroy():Void
     {
-      PubNub.room.clear();
       super.destroy();
     }
 

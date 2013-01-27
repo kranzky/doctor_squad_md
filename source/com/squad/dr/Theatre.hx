@@ -24,12 +24,13 @@ class Theatre extends FlxState
   {
     PubNub.room.pump();
     _game.update();
+    Spawner.god.update();
     super.update();
   }
 
   override public function destroy():Void
   {
-    Spawner.god.abandon(this);
+    Spawner.god.abandon();
     super.destroy();
   }
 }
