@@ -9,6 +9,8 @@ import com.squad.dr.tools.Syringe;
 import com.squad.dr.widgets.Clipboard;
 import com.squad.dr.widgets.Passcode;
 
+import com.squad.dr.Theatre;
+
 class Spawner
 {
   private static var _is_valid:Bool;
@@ -29,10 +31,10 @@ class Spawner
     return god;
   }
 
-  private var _world:FlxState;
+  private var _world:Theatre;
   private var _listen_key:Int;
 
-  public function oversee(world:FlxState)
+  public function oversee(world:Theatre)
   {
     _world = world;
     PubNub.room.deregister(_listen_key);
@@ -78,15 +80,15 @@ class Spawner
     }
     switch(type) {
       case 'Generator':
-        _world.add(new Generator(widget_id, owner_id, attributes));
+        _world.fore.add(new Generator(widget_id, owner_id, attributes));
       case 'Scalpel':
-        _world.add(new Scalpel(widget_id, owner_id, attributes));
+        _world.back.add(new Scalpel(widget_id, owner_id, attributes));
       case 'Syringe':
-        _world.add(new Syringe(widget_id, owner_id, attributes));
+        _world.back.add(new Syringe(widget_id, owner_id, attributes));
       case 'Clipboard':
-        _world.add(new Clipboard(widget_id, owner_id, attributes));
+        _world.mid.add(new Clipboard(widget_id, owner_id, attributes));
       case 'Passcode':
-        _world.add(new Passcode(widget_id, owner_id, attributes));
+        _world.back.add(new Passcode(widget_id, owner_id, attributes));
     }
   }
 

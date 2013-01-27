@@ -5,14 +5,14 @@ import org.flixel.FlxState;
 import org.flixel.FlxSprite;
 import org.flixel.FlxPoint;
 import org.flixel.FlxButton;
-
+import com.squad.dr.DrSquad;
 
 class About extends FlxState
 {
 
   override public function create():Void
   {
-    trace("showing splash screen");
+    DrSquad.log("showing splash screen");
     FlxG.mouse.show();
     FlxG.bgColor = 0xff000000;
 

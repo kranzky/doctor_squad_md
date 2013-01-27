@@ -44,6 +44,7 @@ class Clipboard extends Widget
     add(_messageLabel);
 
     _updateUI();
+    PubNub.room.send({type: "clipboard", action: "init", widgetId: _widgetId, data: _steps.length + "" });
   }
 
 
@@ -70,14 +71,14 @@ class Clipboard extends Widget
   {
     super.update();
     PubNub.room.consume(_listen_key, function(message) {
-      trace( "message" );
-      trace( message );
-      trace( "_steps[_currentStep]" );
-      trace( _steps[_currentStep] );
+      DrSquad.log( "message" );
+      DrSquad.log( message + "" );
+      DrSquad.log( "_steps[_currentStep]" );
+      DrSquad.log( _steps[_currentStep] + "" );
       if (message.action == _steps[_currentStep].action &&
           _steps[_currentStep].data == "" || _steps[_currentStep].data == message.data )
       {
-        trace("Good Job!");
+        DrSquad.log("Good Job!");
         _stepComplete();
       }
     });
