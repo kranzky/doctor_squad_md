@@ -16,7 +16,7 @@ class Tool extends Widget
     if (cb == null)
       cb = onToolClick;
 
-    _toolbutton = new Button(attributes.x, attributes.y, attributes.tool_name, cb, _canInteract);
+    _toolbutton = new Button(attributes.x, attributes.y, attributes.tool_name, cb);
     _toolbutton.loadGraphic(attributes.image_name, false, false);
 
     add(_toolbutton);

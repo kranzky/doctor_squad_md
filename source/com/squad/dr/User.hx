@@ -74,7 +74,13 @@ class User
     return name;
   }
 
-  private static function choose( array:Array<String> ) {
+  public static function randomPlayer():Int
+  {
+    var i = Std.int(Math.random() * (User.me.team.length - 1));
+    return User.me.team[i];
+  }
+
+  public static function choose( array:Array<String> ) {
     var i = Std.int(Math.random() * (array.length - 1));
     return array[i];
   }

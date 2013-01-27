@@ -9,7 +9,6 @@ class Widget extends FlxGroup
 {
   private var _widgetId:Int;
   private var _ownerId:Int;
-  private var _canInteract:Bool;
 
   private var x = 0;
   private var y = 0;
@@ -19,7 +18,6 @@ class Widget extends FlxGroup
     super();
     _widgetId = widgetId;
     _ownerId = ownerId;
-    _canInteract = attributes.canInteract;
     initialise(attributes);
   }
 

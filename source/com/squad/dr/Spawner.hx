@@ -6,6 +6,7 @@ import com.squad.dr.widgets.Widget;
 import com.squad.dr.widgets.Generator;
 import com.squad.dr.tools.Scalpel;
 import com.squad.dr.tools.Syringe;
+import com.squad.dr.widgets.Clipboard;
 
 class Spawner
 {

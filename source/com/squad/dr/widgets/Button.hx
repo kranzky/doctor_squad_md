@@ -6,16 +6,13 @@ import com.squad.dr.PubNub;
 class Button extends FlxButton
 {
   private var _buttoncallback:Void -> Void;
-  public var usable:Bool = false;
 
-  public function new(x, y, labeltext, callbackFunction, usable_)
+  public function new(x, y, labeltext, callbackFunction)
   {
     trace("button instantiated");
     super(x, y, labeltext, _pushed);
     
     trace("new button");
-
-    usable = usable_;
     _buttoncallback = callbackFunction;
     
   }
