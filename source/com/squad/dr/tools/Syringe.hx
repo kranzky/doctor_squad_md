@@ -21,7 +21,8 @@ class Syringe extends Tool
     _drugButtonsGroup = new FlxGroup();
     for (drugname in _drugNames)
     {
-      var b = new Button(attributes.X, attributes.Y-index*20-20, drugname,
+      //trace("attrs:X=" + attributes.x + " attrs.Y=" + attributes.y);
+      var b = new Button(attributes.x, attributes.y-index*20-20, drugname,
         function(){onDrugButtonClick(drugname);});
       _drugButtons.push(b);
       _drugButtonsGroup.add(b);
@@ -56,6 +57,7 @@ class Syringe extends Tool
 
   public override function onToolClick(): Void
   {
+    trace("onToolClick fired");
     if (is_owner()) {
       trace("Clicked the syringe");
       toggleShowDrugs();
