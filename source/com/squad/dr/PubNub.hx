@@ -9,6 +9,7 @@ typedef PubMsg = {
   @:optional var type : String;
   @:optional var action : String;
   @:optional var data : String;
+  @:optional var attributes : Dynamic;
   @:optional var ownerId : Null<Int>;
   @:optional var widgetId : Null<Int>;
 }
@@ -130,7 +131,7 @@ class PubNub
     if (_channel == null) {
       throw "Set the channel first.";
     }
-    var regex_content = ~/^(\{.*?\}),(.*)$/;
+    var regex_content = ~/^(\{.*?\}),(\{.*)$/;
     var message = Thread.readMessage(false);
     while (message != null) {
       while(true) {
@@ -160,6 +161,11 @@ class PubNub
         _observers.remove(observer);
       }
     }
+  }
+
+  public function clear():Void
+  {
+    _observers = new FastList<Observer>();
   }
 
   private function _notify_observers(message:String):Void

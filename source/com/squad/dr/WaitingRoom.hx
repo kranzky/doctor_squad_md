@@ -90,7 +90,8 @@ class WaitingRoom extends FlxState
       for (key in _keys) {
         PubNub.room.deregister(key);
       }
-    PubNub.room.send({type: "waitroom", action: "leave", ownerId: User.me.id});
+      PubNub.room.clear();
+      PubNub.room.send({type: "waitroom", action: "leave", ownerId: User.me.id});
       super.destroy();
     }
 

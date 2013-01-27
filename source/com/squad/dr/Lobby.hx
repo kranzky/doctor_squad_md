@@ -1,5 +1,7 @@
 package com.squad.dr;
 
+import haxe.Json;
+
 import nme.Assets;
 import nme.geom.Rectangle;
 import nme.net.SharedObject;
@@ -24,50 +26,40 @@ import com.squad.dr.tools.Syringe;
 class Lobby extends FlxState
 {
 	override public function create():Void
-  {
-    #if !neko
+    {
+      #if !neko
     FlxG.bgColor = 0xff631c1b;
-    #else
-    FlxG.bgColor = {rgb: 0x131c1b, a: 0xff};
-    #end
-    FlxG.mouse.show();
+      #else
+      FlxG.bgColor = {rgb: 0x131c1b, a: 0xff};
+      #end
+      FlxG.mouse.show();
 
-    //add the entry keypad
-    var keypad = new Keypad(200, 200, function(room) {
-      PubNub.room.set_channel(room);
-      FlxG.switchState(new WaitingRoom());
-      });
+      //add the entry keypad
+      var keypad = new Keypad(200, 200, function(room) {
+        PubNub.room.set_channel(room);
+        FlxG.switchState(new WaitingRoom());
+        });
 
-    add(keypad);
+      add(keypad);
 
-    trace ("added keypad");
+      trace ("added keypad");
+    }
 
-    //var tb: Toolbar;
-    //tb = Toolbar.getInstance();
-    //add(tb);
+    //The on click handler for the start button
+    private function onStartClick( ):Void
+    {
+      //Tell Flixel to change the active game state to the actual game
+      //FlxG.switchState( new Theatre( ) );
+    }
 
-    // var s = new Scalpel(2, true, true, 400, 400);
-    // //tb.addTool(s);
-    // var sy = new Syringe(3, true, true, 200, 400, ["Adrenaline", "Ephidrine", "Paradoxamol"]);
-    // //tb.addTool(sy);
-    // add(s);
-    // add(sy);
-  }
+    override public function destroy():Void
+    {
+      PubNub.room.clear();
+      super.destroy();
+    }
 
-  //The on click handler for the start button
-  private function onStartClick( ):Void
-  {
-    //Tell Flixel to change the active game state to the actual game
-    //FlxG.switchState( new Theatre( ) );
-  }
-
-  override public function destroy():Void
-  {
-    super.destroy();
-  }
-
-  override public function update():Void
-  {
-    super.update();
-  }
+    override public function update():Void
+    {
+      super.update();
+    }
 }

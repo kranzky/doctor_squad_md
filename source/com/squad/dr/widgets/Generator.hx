@@ -14,7 +14,7 @@ class Generator extends Widget
     private var _power:Float = 30.0;
     private var _sendTimer:Float = 1.0;
 
-    public override function initialise()
+    public override function initialise(attributes:Dynamic)
     {
         trace("new generator");
         var x = 100;

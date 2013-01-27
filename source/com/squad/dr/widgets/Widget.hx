@@ -9,16 +9,18 @@ class Widget extends FlxGroup
 {
   private var _widgetId:Int;
   private var _ownerId:Int;
+  private var _canInteract:Bool;
 
   private var x = 0;
   private var y = 0;
 
-  public function new(widgetId = null, ownerId = null)
+  public function new(widgetId, ownerId, attributes:Dynamic)
   {
     super();
     _widgetId = widgetId;
     _ownerId = ownerId;
-    initialise();
+    _canInteract = attributes.canInteract;
+    initialise(attributes);
   }
 
   public function moveTo(X, Y)
@@ -38,7 +40,7 @@ class Widget extends FlxGroup
 
   }
 
-  public function initialise():Void
+  public function initialise(attributes:Dynamic):Void
   {
     // override me
   }
