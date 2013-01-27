@@ -76,7 +76,9 @@ class User
 
   public static function randomPlayer():Int
   {
-    var i = Std.int(Math.random() * (User.me.team.length - 1));
+    var i = Std.int(Math.random() * User.me.team.length);
+    if (i > User.me.team.length-1)
+      i = User.me.team.length - 1;
     return User.me.team[i];
   }
 
