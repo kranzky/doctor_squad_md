@@ -24,7 +24,7 @@ class Clipboard extends Widget
   private var _listen_key:Int = 0;
   private var _successAlpha:Float = 4.0;
 
-  private var _timer:Float = 8.0;
+  private var _timer:Float = 10.0;
 
   public override function initialise(attributes:Dynamic)
   {
@@ -58,7 +58,7 @@ class Clipboard extends Widget
 
 
   private function _stepComplete(failed=false) {
-    _timer = 8.0;
+    _timer = 10.0;
     if (failed)
       PubNub.room.send({type: "clipboard", action: "stepfailed", widgetId: _widgetId, data: _steps[_currentStep].message});
     else

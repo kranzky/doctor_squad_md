@@ -21,7 +21,8 @@ class Theatre extends FlxState
   override public function create():Void
   {
     var background:FlxSprite = new FlxSprite(0,0, "assets/dr/Background3a.png");
-    background.scale.x = background.scale.y = 0.5;
+    //background.scale.x = background.scale.y = 0.8;
+    background.y -= 150;
     add(background);
 
     fore = new FlxGroup();
