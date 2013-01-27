@@ -39,8 +39,8 @@ class Clipboard extends Widget
 
     _listen_key = PubNub.room.register({type: "tool"});
 
-    _messageLabel = new FlxText(0, 0, 4800, "Your tasklist..." );
-    _messageLabel.size = 12;
+    _messageLabel = new FlxText(0, 25, 480, "Your tasklist..." );
+    _messageLabel.size = 16;
     add(_messageLabel);
 
     _updateUI();

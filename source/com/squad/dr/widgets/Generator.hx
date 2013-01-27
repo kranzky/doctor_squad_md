@@ -18,14 +18,17 @@ class Generator extends Widget
     public override function initialise(attributes:Dynamic)
     {
         DrSquad.log("new generator");
-        var x = 100;
-        var y = 100;
+        //var x = 100;
+        //var y = 100;
         _darkness = new FlxSprite(0, 0);
         _darkness.makeGraphic(FlxG.width, FlxG.height, 0xff000000); //colours are ARGB
         //_darkness.blend = nme.display.BlendMode.SCREEN;
 
-        _button = new Button(x, y, "Generator", buttonPushed);
-        _button.loadGraphic( "assets/dr/square_button.png", false, false, 45, 45);
+        attributes.x = 40;
+        attributes.y = 600;
+        _button = new Button(attributes.x, attributes.y, "Generator", buttonPushed);
+        //_button.loadGraphic( "assets/dr/square_button.png", false, false, 45, 45);
+        //_button.loadGraphic( "assets/dr/Buttons-11.png", false, false, 45, 45);
         _power = 30.0;
         if (is_owner())
         {
