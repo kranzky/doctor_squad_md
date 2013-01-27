@@ -97,7 +97,7 @@ class Heartbeat extends FlxSprite
       _beatSound = new FlxSound();
       _beatSound.loadEmbedded("Heartbeat", false, false);
 
-      _beatSound.setVolume(1.0);
+      // _beatSound.setVolume(1.0);
       //_beatSound.stop();
       _beatSound.play(false);
       //trace("beat");
