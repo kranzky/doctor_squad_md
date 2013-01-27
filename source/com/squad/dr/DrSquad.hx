@@ -9,6 +9,11 @@ class DrSquad extends FlxGame
 {
   private var _skipSplash = false;
 
+  public static function log( msg:String )
+  {
+    trace(msg);
+  }
+
   public function new()
   {
     var stageWidth:Int = Lib.current.stage.stageWidth;

@@ -21,7 +21,7 @@ class Syringe extends Tool
     _drugButtonsGroup = new FlxGroup();
     for (drugname in _drugNames)
     {
-      //trace("attrs:X=" + attributes.x + " attrs.Y=" + attributes.y);
+      //DrSquad.log("attrs:X=" + attributes.x + " attrs.Y=" + attributes.y);
       var b = new Button(attributes.x, attributes.y-index*20-20, drugname,
         function(){onDrugButtonClick(drugname);});
       _drugButtons.push(b);
@@ -49,7 +49,7 @@ class Syringe extends Tool
   public function onDrugButtonClick(drugname:String): Void
   {
     if (is_owner()) {
-      trace("drug button clicked: " + drugname);
+      DrSquad.log("drug button clicked: " + drugname);
       PubNub.room.send({type: "tool", action: "syringe", widgetId: _widgetId, data: drugname});
       toggleShowDrugs();
     }
@@ -57,9 +57,9 @@ class Syringe extends Tool
 
   public override function onToolClick(): Void
   {
-    trace("onToolClick fired");
+    DrSquad.log("onToolClick fired");
     if (is_owner()) {
-      trace("Clicked the syringe");
+      DrSquad.log("Clicked the syringe");
       toggleShowDrugs();
     }
   }
