@@ -22,9 +22,9 @@ class Menu extends FlxState
     titleGraphic.loadGraphic("assets/dr/title.png");
     add(titleGraphic);
 
-    _startButton = new FlxButton(120, 500, "Summon Squad", _onStartClick);
-    _aboutButton = new FlxButton(120, 560, "About", _onAboutClick);
-    _exitButton = new FlxButton(120, 620, "Exit", _onExitClick);
+    _startButton = new FlxButton(280, 580, "Summon Squad", _onStartClick);
+    _aboutButton = new FlxButton(280, 640, "About", _onAboutClick);
+    _exitButton = new FlxButton(280, 700, "Exit", _onExitClick);
 
     add(_startButton);
     add(_aboutButton);
