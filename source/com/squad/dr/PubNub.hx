@@ -19,21 +19,34 @@ class Observer
   public var key:Int;
 
   private var _pub_msg:PubMsg;
-  private var _notify:(PubMsg -> Void);
+  private var _queue:Array<PubMsg>;
 
   private static var _next_key:Int = 0;
 
-  public function new(pub_msg:PubMsg, notify:(PubMsg -> Void))
+  public function new(pub_msg:PubMsg)
   {
     key = ++_next_key;
     _pub_msg = pub_msg;
-    _notify = notify;
+    _queue = new Array<PubMsg>();
   }
 
   public function notify(pub_msg:PubMsg):Void
   {
     if (_wants(pub_msg)) {
-      _notify(pub_msg);
+      _queue.push(pub_msg);
+    }
+  }
+
+  public function consume(notify:(PubMsg -> Void)):Void
+  {
+    _queue.reverse();
+    var pub_msg:PubMsg;
+    while (true) {
+      pub_msg = _queue.pop();
+      if (pub_msg == null) {
+        break;
+      }
+      notify(pub_msg);
     }
   }
 
@@ -147,9 +160,9 @@ class PubNub
     }
   }
 
-  public function register(pub_msg:PubMsg, notify):Int
+  public function register(pub_msg:PubMsg):Int
   {
-    var observer = new Observer(pub_msg, notify);
+    var observer = new Observer(pub_msg);
     _observers.add(observer);
     return observer.key;
   }
@@ -163,9 +176,13 @@ class PubNub
     }
   }
 
-  public function clear():Void
+  public function consume(key:Int, notify:(PubMsg -> Void)):Void
   {
-    _observers = new FastList<Observer>();
+    for (observer in _observers) {
+      if (key == observer.key) {
+        observer.consume(notify);
+      }
+    }
   }
 
   private function _notify_observers(message:String):Void

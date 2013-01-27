@@ -15,12 +15,12 @@ import com.squad.dr.Keypad;
 
 class WaitingRoom extends FlxState
 {
-  private var _keys:Array<Int>;
   private var _frame:Int;
   private var _announcedMyself:Bool=false;
   private var _startButton:FlxButton;
   private var _playersLabel:FlxText;
   private var _messageLabel:FlxText;
+  private var _listen_key:Int = 0;
 
   override public function create():Void
     {
@@ -43,34 +43,9 @@ class WaitingRoom extends FlxState
 
       trace("Welcome to Waiting Room #" + PubNub.room.get_channel());
 
-      _keys = new Array<Int>();
-    _listen();
+    _listen_key = PubNub.room.register({type: "waitroom"});
 
       _frame = 0;
-    }
-
-  private function _listen():Void
-    {
-    var key = PubNub.room.register({type: "waitroom"}, function(message) {
-      switch (message.action)
-      {
-        case "enter":
-        trace("User #" + message.ownerId + " entered the room." );
-        if (User.me.hello(message.ownerId)) {
-          User.me.team.push(message.ownerId);
-          if (message.ownerId != User.me.id) {
-              PubNub.room.send({type: "waitroom", action: "enter", ownerId: User.me.id});
-          }
-        }
-        case "leave":
-          trace("User #" + message.ownerId + " left the room." );
-          User.me.team.remove(message.ownerId);
-        case "start":
-          trace("User #" + message.ownerId + " started the game." );
-          _onStart();
-      }
-      });
-      _keys.push(key);
     }
 
   //The on click handler for the start button
@@ -87,10 +62,7 @@ class WaitingRoom extends FlxState
 
     override public function destroy():Void
     {
-      for (key in _keys) {
-        PubNub.room.deregister(key);
-      }
-      PubNub.room.clear();
+      PubNub.room.deregister(_listen_key);
       PubNub.room.send({type: "waitroom", action: "leave", ownerId: User.me.id});
       super.destroy();
     }
@@ -98,6 +70,25 @@ class WaitingRoom extends FlxState
     override public function update():Void
     {
       PubNub.room.pump();
+      PubNub.room.consume(_listen_key, function(message) {
+        switch (message.action)
+        {
+          case "enter":
+          trace("User #" + message.ownerId + " entered the room." );
+          if (User.me.hello(message.ownerId)) {
+            User.me.team.push(message.ownerId);
+            if (message.ownerId != User.me.id) {
+                PubNub.room.send({type: "waitroom", action: "enter", ownerId: User.me.id});
+            }
+          }
+          case "leave":
+            trace("User #" + message.ownerId + " left the room." );
+            User.me.team.remove(message.ownerId);
+          case "start":
+            trace("User #" + message.ownerId + " started the game." );
+            _onStart();
+        }
+      });
       _frame++;
       if (_frame > 100) {
 

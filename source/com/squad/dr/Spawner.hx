@@ -30,18 +30,19 @@ class Spawner
   }
 
   private var _world:FlxState;
-  private var _key:Int;
+  private var _listen_key:Int;
 
   public function oversee(world:FlxState)
   {
     _world = world;
-    _key = PubNub.room.register({type: 'GOD'}, _process);
+    PubNub.room.deregister(_listen_key);
+    _listen_key = PubNub.room.register({type: 'GOD'});
   }
 
-  public function abandon(world:FlxState)
+  public function abandon()
   {
     _world = null;
-    PubNub.room.deregister(_key);
+    PubNub.room.deregister(_listen_key);
   }
 
   public function create(type, owner_id:Null<Int>, widget_id:Null<Int>, attributes) {
@@ -59,6 +60,11 @@ class Spawner
       ownerId: owner_id,
       widgetId: widget_id
     });
+  }
+
+  public function update()
+  {
+    PubNub.room.consume(_listen_key, _process);
   }
 
   private function _process(message)
