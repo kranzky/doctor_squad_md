@@ -50,7 +50,7 @@ class Menu extends FlxState
 
   private function _onAboutClick( ):Void
   {
-    
+    FlxG.switchState(new About());
   }
 
   private function _onExitClick( ):Void
