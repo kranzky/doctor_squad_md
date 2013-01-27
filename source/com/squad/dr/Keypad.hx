@@ -19,7 +19,7 @@ class Keypad extends FlxGroup
     _prompt = prompt;
     _numDigits = numDigits;
     super();
-    trace("new keypad");
+    DrSquad.log("new keypad");
     _display = new FlxText(x, y, 300, _prompt);
     _display.size = 18;
     _updateUI();
@@ -45,7 +45,6 @@ class Keypad extends FlxGroup
           if (_value.length < _numDigits)
           {
             _value += s;
-            _updateUI();
           
             if (_value.length == _numDigits)
             {
@@ -56,6 +55,7 @@ class Keypad extends FlxGroup
               }
               _value = "";
             }
+            _updateUI();
           }
         });
       button.loadGraphic( "assets/dr/square_button.png", false, false, 45, 45);
@@ -64,7 +64,7 @@ class Keypad extends FlxGroup
 
     //add the button to the state draw list
 
-    trace ("added keypad");
+    DrSquad.log("added keypad");
   }
 
   private function _updateUI()

@@ -16,7 +16,7 @@ class Splash extends FlxState
 
   override public function create():Void
   {
-    trace("showing splash screen");
+    DrSquad.log("showing splash screen");
     FlxG.mouse.hide();
     FlxG.bgColor = 0xffffffff;
 
@@ -43,7 +43,7 @@ class Splash extends FlxState
       if (!_doneSplash)
       {
         _doneSplash = true;
-        trace("Finished splash screen, moving to menu");
+        DrSquad.log("Finished splash screen, moving to menu");
         FlxG.switchState(new Menu());
       }
     }

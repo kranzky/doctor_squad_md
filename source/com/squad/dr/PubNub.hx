@@ -114,6 +114,12 @@ class PubNub
 
   public function send(pub_msg:PubMsg):Void
   {
+    //stub out the network with this!
+    // for (observer in _observers) {
+    //   observer.notify(pub_msg);
+    // }
+    // return;
+
     if (_channel == null) {
       throw "Set the channel first.";
     }
@@ -135,10 +141,10 @@ class PubNub
     while (true) {
       sub_msg = _queue.pop();
       if (sub_msg == null) {
-        break;
-      }
+            break;
+          }
       _notify_observers(sub_msg);
-    }
+        }
   }
 
   public function register(pub_msg:PubMsg):Int
