@@ -1,5 +1,6 @@
 package com.squad.dr.tools;
 import com.squad.dr.widgets.Button;
+import com.squad.dr.widgets.Widget;
 import com.squad.dr.PubNub;
 import org.flixel.FlxGroup;
 
@@ -12,7 +13,7 @@ class Syringe extends Tool
 
   public override function initialise(attributes:Dynamic)
   {
-    attributes.image_name = "assets/dr/tools/syringe.png";
+    attributes.image_info = Widget.IMAGEINFO_SYRINGE;
     attributes.tool_name = "Syringe";
     super.initialise(attributes);
     _drugNames = attributes.drugs;
@@ -22,8 +23,14 @@ class Syringe extends Tool
     for (drugname in _drugNames)
     {
       //DrSquad.log("attrs:X=" + attributes.x + " attrs.Y=" + attributes.y);
-      var b = new Button(attributes.x, attributes.y-index*20-20, drugname,
+      var b = new Button(_toolbutton.x-_toolbutton.width, _toolbutton.y-index*(64), drugname,
         function(){onDrugButtonClick(drugname);});
+      trace("attributes.x = " + attributes.x);
+      trace("syringe.x = " + x);
+      b.setImageInfo(Widget.IMAGEINFO_LONGBUTTON);
+      b.scale.x = b.scale.y = 0.25;
+      b.setLabelSane();
+  
       _drugButtons.push(b);
       _drugButtonsGroup.add(b);
       index ++;

@@ -7,6 +7,11 @@ import com.squad.dr.PubNub;
 
 class Widget extends FlxGroup
 {
+  public static var IMAGEINFO_SQUAREBUTTON = {imagename:"assets/dr/Buttons-11.png", xsize: 256, ysize:256};
+  public static var IMAGEINFO_LONGBUTTON = {imagename:"assets/dr/Buttons-12.png", xsize: 768, ysize:256};
+  public static var IMAGEINFO_ROUNDBUTTON = {imagename:"assets/dr/Buttons-10.png", xsize: 256, ysize:256};
+  public static var IMAGEINFO_SYRINGE = {imagename:"assets/dr/tools/UI-14.png", xsize: 256, ysize:512};
+  public static var IMAGEINFO_SCALPEL = {imagename:"assets/dr/tools/UI-15.png", xsize: 512, ysize:512};
   private var _widgetId:Int;
   private var _ownerId:Int;
 

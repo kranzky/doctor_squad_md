@@ -28,11 +28,10 @@ class Lobby extends FlxState
 	override public function create():Void
     {
       #if !neko
-    FlxG.bgColor = 0xff631c1b;
+      FlxG.bgColor = 0xff631c1b;
       #else
       FlxG.bgColor = {rgb: 0x131c1b, a: 0xff};
       #end
-      FlxG.mouse.show();
 
       //add the entry keypad
       var keypad = new Keypad(200, 200, function(room) {
@@ -42,7 +41,7 @@ class Lobby extends FlxState
 
       add(keypad);
 
-      trace ("added keypad");
+      DrSquad.log ("added keypad");
     }
 
     //The on click handler for the start button
