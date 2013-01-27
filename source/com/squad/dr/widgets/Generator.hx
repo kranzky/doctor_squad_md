@@ -18,8 +18,8 @@ class Generator extends Widget
     public override function initialise(attributes:Dynamic)
     {
         DrSquad.log("new generator");
-        var x = 100;
-        var y = 100;
+        var x = 75;
+        var y = 550;
         _darkness = new FlxSprite(0, 0);
         _darkness.makeGraphic(FlxG.width, FlxG.height, 0xff000000); //colours are ARGB
         //_darkness.blend = nme.display.BlendMode.SCREEN;
@@ -58,7 +58,7 @@ class Generator extends Widget
         });
         if (_power > 0)
         {
-            _power = _power - (FlxG.elapsed*2);
+            _power = _power - (FlxG.elapsed);
             if (_power < 0)
             {
                 _power = 0.0;
@@ -101,9 +101,7 @@ class Generator extends Widget
         var lightLevel = (_power / 25);
         if (lightLevel > 1.0)
         lightLevel = 1.0;
-        var alpha = 1 - lightLevel;
-        if (alpha < 0.2)
-          alpha = 0.2;
+        var alpha = 0.8 - (lightLevel*0.8);
         _darkness.alpha = alpha;
     }
 }

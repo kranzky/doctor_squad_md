@@ -6,7 +6,6 @@ import com.squad.dr.widgets.Widget;
 import com.squad.dr.widgets.Generator;
 import com.squad.dr.tools.Scalpel;
 import com.squad.dr.tools.Syringe;
-import com.squad.dr.tools.Suction;
 import com.squad.dr.widgets.Clipboard;
 import com.squad.dr.widgets.Passcode;
 
@@ -86,8 +85,6 @@ class Spawner
         _world.back.add(new Scalpel(widget_id, owner_id, attributes));
       case 'Syringe':
         _world.back.add(new Syringe(widget_id, owner_id, attributes));
-      case 'Suction':
-        _world.mid.add(new Suction(widget_id, owner_id, attributes));
       case 'Clipboard':
         _world.mid.add(new Clipboard(widget_id, owner_id, attributes));
       case 'Passcode':

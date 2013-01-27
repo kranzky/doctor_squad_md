@@ -1,6 +1,7 @@
 package com.squad.dr;
 
 import com.squad.dr.Game;
+import com.squad.dr.widgets.Heartbeat;
 
 import org.flixel.FlxSprite;
 import org.flixel.FlxG;
@@ -18,9 +19,11 @@ class Theatre extends FlxState
 
   override public function create():Void
   {
-    var _background = new FlxSprite(0, 0);
-    _background.makeGraphic(FlxG.width, FlxG.height, 0xffaabbee); //colours are ARGB
-    add(_background);
+    #if !neko
+    FlxG.bgColor = 0xffaabbee;
+    #else
+    FlxG.bgColor = {rgb: 0xaabbee, a: 0xff};
+    #end
 
     fore = new FlxGroup();
     mid  = new FlxGroup();
@@ -32,6 +35,9 @@ class Theatre extends FlxState
 
     Spawner.god.oversee(this);
     _game = new Game();
+
+    var heartbeat = new Heartbeat(0,0);
+    back.add(heartbeat);
   }
 
   override public function update():Void

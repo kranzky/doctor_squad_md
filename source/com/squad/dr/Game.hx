@@ -15,7 +15,6 @@ class Game
         ["Inject Paradoxamol!", "syringe", "Paradoxamol"],
         ["Need Adrenaline Stat!", "syringe", "Adrenaline"],
         ["Incision", "scalpel", ""],
-        ["Bloodspurt! I need suction! STAT!", "suction", "complete"],
         ["Security Clearance 800813", "passcode", "800813"],
         ["Security Clearance 776776", "passcode", "776776"],
         ["Security Clearance 123456", "passcode", "123456"]
@@ -53,11 +52,6 @@ class Game
   {
     if (User.me.is_boss) {
       Spawner.god.create('Generator', null, null, {});
-      Spawner.god.create('Suction', null, null, {
-        x: 200,
-        y: 200,
-        local: true
-      });
       Spawner.god.create('Scalpel', User.randomPlayer(), null, {
         x: 400,
         y: 400,
@@ -109,7 +103,7 @@ class Game
 
   private function _switch_to(state)
   {
-    DrSquad.log("GAME STATE : " + state);
+    trace("GAME STATE : " + state);
     _timer = 0.0;
     _state = state;
   }
