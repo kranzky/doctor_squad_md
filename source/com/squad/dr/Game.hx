@@ -51,17 +51,15 @@ class Game
       Spawner.god.create('Generator', null, null, {});
       Spawner.god.create('Scalpel', User.randomPlayer(), null, {
         x: 400,
-        y: 400
+        y: 400,
+        local: true
       });
       Spawner.god.create('Syringe', User.randomPlayer(), null, {
         x: 200,
         y: 400,
-        drugs: ["Adrenaline", "Ephidrine", "Paradoxamol"]
+        drugs: ["Adrenaline", "Ephidrine", "Paradoxamol"],
+        local: true
       });
-
-      
-
-
 
       for (userId in User.me.team)
       {
@@ -70,7 +68,8 @@ class Game
             _randomStep(),
             _randomStep(),
             _randomStep(),
-            ]
+            ],
+          local: true
         }); 
       }
     }
