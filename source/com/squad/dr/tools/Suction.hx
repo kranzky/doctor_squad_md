@@ -15,7 +15,7 @@ class Suction extends Widget
 
   public override function initialise(attributes: Dynamic)
   {
-    attributes.image_info = Widget.IMAGEINFO_SQUAREBUTTON;
+    attributes.image_info = Widget.IMAGEINFO_ROUNDBUTTON;
     attributes.tool_name = "Suction";
     _suctionTime = 5.0;
     super.initialise(attributes);
