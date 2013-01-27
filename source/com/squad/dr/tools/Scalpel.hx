@@ -14,5 +14,6 @@ class Scalpel extends Tool
   public override function onToolClick(): Void
   {
     trace("Scalpel was clicked");
+    PubNub.room.send({type: "tool", action: "scalpel", widgetId: _widgetId, data:""});
   }
 }
