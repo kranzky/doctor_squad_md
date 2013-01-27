@@ -46,9 +46,9 @@ class Keypad extends FlxGroup
       button = new PxButton(x+((i+ii)%3)*45, y+50+Std.int(i/3)*45, s, 
         function() {
           
-          var beep = new FlxSound();
-          beep.loadEmbedded("Beep", false, false);
-          beep.play();
+          //var beep = new FlxSound();
+          //beep.loadEmbedded("Beep", false, false);
+          //beep.play();
 
           if (_value.length < _numDigits)
           {

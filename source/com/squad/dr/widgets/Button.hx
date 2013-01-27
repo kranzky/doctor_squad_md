@@ -62,10 +62,9 @@ class Button extends FlxButton
   {
     DrSquad.log("button callback fired");
 
-    trace("Beep");
-    var beep = new FlxSound();
-    beep.loadEmbedded("Beep", false, false);
-    beep.play();
+    //var beep = new FlxSound();
+    //beep.loadEmbedded("Beep", false, false);
+    //beep.play();
 
     updateState();
     if (_buttoncallback != null)
