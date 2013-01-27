@@ -92,6 +92,8 @@ class Generator extends Widget
         if (lightLevel > 1.0)
         lightLevel = 1.0;
         var alpha = 1 - lightLevel;
+        if (alpha < 0.1)
+          alpha = 0.1;
         _darkness.alpha = alpha;
     }
 }
