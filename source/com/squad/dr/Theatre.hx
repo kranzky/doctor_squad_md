@@ -16,14 +16,14 @@ class Theatre extends FlxState
   public var fore:FlxGroup;
   public var mid:FlxGroup;
   public var back:FlxGroup;
+  public var _heartbeat:Heartbeat;
 
   override public function create():Void
   {
-    #if !neko
-    FlxG.bgColor = 0xffaabbee;
-    #else
-    FlxG.bgColor = {rgb: 0xaabbee, a: 0xff};
-    #end
+    var background:FlxSprite = new FlxSprite(0,0, "assets/dr/Background3a.png");
+    //background.scale.x = background.scale.y = 0.8;
+    background.y -= 150;
+    add(background);
 
     fore = new FlxGroup();
     mid  = new FlxGroup();
@@ -36,8 +36,8 @@ class Theatre extends FlxState
     Spawner.god.oversee(this);
     _game = new Game();
 
-    var heartbeat = new Heartbeat(0,0);
-    back.add(heartbeat);
+    _heartbeat = new Heartbeat(0,0);
+    back.add(_heartbeat);
   }
 
   override public function update():Void

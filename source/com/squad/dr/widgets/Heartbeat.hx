@@ -33,7 +33,7 @@ class Heartbeat extends FlxSprite
     _path = new FlxPath();   
     _path.ignoreDrawDebug = false; 
 
-    _listen_key = PubNub.room.register({type: "clipboard"});
+    _listen_key = PubNub.room.register({});
 
     _audioBeatTime = 0.0;
     _beatSound = new FlxSound();
@@ -45,6 +45,13 @@ class Heartbeat extends FlxSprite
   public override function update():Void
   {
     super.update();
+
+    PubNub.room.consume(_listen_key, function(message) {
+      if (message.type == "tool" && message.action == "shock")
+        beat();
+      else if (message.type == "clipboard" && message.action == "stepfailed")
+        flatline();
+      });
 
     _time += FlxG.elapsed;
 
@@ -90,7 +97,7 @@ class Heartbeat extends FlxSprite
       _beatSound = new FlxSound();
       _beatSound.loadEmbedded("Heartbeat", false, false);
 
-      _beatSound.setVolume(1.0);
+      // _beatSound.setVolume(1.0);
       //_beatSound.stop();
       _beatSound.play(false);
       //trace("beat");

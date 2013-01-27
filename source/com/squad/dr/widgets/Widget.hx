@@ -12,6 +12,7 @@ class Widget extends FlxGroup
   public static var IMAGEINFO_ROUNDBUTTON = {imagename:"assets/dr/Buttons-10.png", xsize: 256, ysize:256};
   public static var IMAGEINFO_SYRINGE = {imagename:"assets/dr/tools/UI-14.png", xsize: 256, ysize:512};
   public static var IMAGEINFO_SCALPEL = {imagename:"assets/dr/tools/UI-15.png", xsize: 512, ysize:512};
+  public static var IMAGEINFO_SHOCK = {imagename:"assets/dr/tools/UI-17.png", xsize: 256, ysize:256};
   private var _widgetId:Int;
   private var _ownerId:Int;
 

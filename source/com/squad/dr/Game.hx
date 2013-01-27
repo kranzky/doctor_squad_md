@@ -19,7 +19,8 @@ class Game
         ["Bloodspurt! I need suction!", "suction", "complete"],
         ["Security Clearance 800813", "passcode", "800813"],
         ["Security Clearance 776776", "passcode", "776776"],
-        ["Security Clearance 123456", "passcode", "123456"]
+        ["Security Clearance 123456", "passcode", "123456"],
+        ["CLEAR!!!!!!!!!", "shock", ""]
       ];
 
   public function new()
@@ -75,37 +76,49 @@ class Game
           //});
       case 1:
         Spawner.god.create('Suction', null, null, {
-          x: 40,
-          y: 300,
+          x: 0,
+          y: 200,
           local: true
         });
       case 2:
         Spawner.god.create('Scalpel', User.randomPlayer(), null, {
           x: 200,
-          y: 300,
+          y: 200,
           local: true
         });
       case 3:
         Spawner.god.create('Syringe', User.randomPlayer(), null, {
           x: 400,
-          y: 400,
+          y: 450,
           drugs: ["Adrenaline", "Ephidrine", "Paradoxamol"],
           local: true
         });
       case 4:
         Spawner.god.create('Passcode', User.randomPlayer(), null, {
-          x: 300,
-          y: 600,
+          x: 250,
+          y: 550,
+          local: true
+        });
+      case 5:
+        Spawner.god.create('Shock', User.randomPlayer(), null, {
+          x: 400,
+          y: 200,
           local: true
         });
       default:
-        var index = _spawn_index - 5;
+        var index = _spawn_index - 6;
         if (index >= User.me.team.length) {
           return false;
         }
         var userId = User.me.team[index];
         Spawner.god.create('Clipboard', userId, null, {
           steps: [ 
+            _randomStep(),
+            _randomStep(),
+            _randomStep(),
+            _randomStep(),
+            _randomStep(),
+            _randomStep(),
             _randomStep(),
             _randomStep(),
             _randomStep(),

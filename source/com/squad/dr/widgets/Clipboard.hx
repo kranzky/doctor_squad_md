@@ -24,6 +24,8 @@ class Clipboard extends Widget
   private var _listen_key:Int = 0;
   private var _successAlpha:Float = 4.0;
 
+  private var _timer:Float = 10.0;
+
   public override function initialise(attributes:Dynamic)
   {
     _steps = new Array<Step>();
@@ -45,7 +47,7 @@ class Clipboard extends Widget
     _messageLabel.size = 12;
     add(_messageLabel);
 
-    _successLabel = new FlxText(200, 175, 340, "" );
+    _successLabel = new FlxText(200, 175, 540, "" );
     _successLabel.size = 12;
     _successLabel.setColor( 0x00ff00 );
     add(_successLabel);
@@ -55,8 +57,12 @@ class Clipboard extends Widget
   }
 
 
-  private function _stepComplete() {
-    PubNub.room.send({type: "clipboard", action: "stepcomplete", widgetId: _widgetId, data: _steps[_currentStep].message});
+  private function _stepComplete(failed=false) {
+    _timer = 10.0;
+    if (failed)
+      PubNub.room.send({type: "clipboard", action: "stepfailed", widgetId: _widgetId, data: _steps[_currentStep].message});
+    else
+      PubNub.room.send({type: "clipboard", action: "stepcomplete", widgetId: _widgetId, data: _steps[_currentStep].message});
     if (_steps.length > _currentStep+1) {
       _currentStep += 1;
     } else {
@@ -77,6 +83,15 @@ class Clipboard extends Widget
   public override function update()
   {
     super.update();
+    if (_timer > 0.0)
+    {
+      _timer -= FlxG.elapsed;
+    }
+    else 
+    {
+      _stepComplete( true );
+    }
+
 
     if (_successAlpha > 0.0)
       _successAlpha -= FlxG.elapsed;
@@ -96,12 +111,23 @@ class Clipboard extends Widget
           DrSquad.log("Good Job!");
           _stepComplete();
         }
+        if (message.action == "shock")
+        {
+          FlxG.flash(0xffff00, 1.0);
+        }
       }
       else if (message.type == "clipboard" && message.action == "stepcomplete" )
       {
         _successLabel.text = message.data + " Complete!";
+        _successLabel.setColor( 0x00ff00 );
+        _successAlpha = 4.0;
+      } else if (message.type == "clipboard" && message.action == "stepfailed" )
+      {
+        _successLabel.text = message.data + " FAILED!";
+        _successLabel.setColor( 0xff0000 );
         _successAlpha = 4.0;
       }
+
     });
   }
 
