@@ -1,6 +1,7 @@
 package com.squad.dr;
 
 import com.squad.dr.Spawner;
+import com.squad.dr.User;
 import org.flixel.FlxG;
 
 class Game
@@ -8,6 +9,13 @@ class Game
   var _frame:Float;
   var _timer:Float;
   var _state:String;
+
+  private static var _steps:Array<Array<String>> = [
+        ["Need Ephidrine Stat!", "syringe", "Ephidrine"],
+        ["Inject Paradoxamol!", "syringe", "Paradoxamol"],
+        ["Need Adrenaline Stat!", "syringe", "Adrenaline"],
+        ["Incision", "scalpel", ""]
+      ];
 
   public function new()
   {
@@ -41,23 +49,38 @@ class Game
   {
     if (User.me.is_boss) {
       Spawner.god.create('Generator', null, null, {});
-      Spawner.god.create('Scalpel', null, null, {
+      Spawner.god.create('Scalpel', User.randomPlayer(), null, {
         x: 400,
         y: 400
       });
-      Spawner.god.create('Syringe', null, null, {
+      Spawner.god.create('Syringe', User.randomPlayer(), null, {
         x: 200,
         y: 400,
         drugs: ["Adrenaline", "Ephidrine", "Paradoxamol"]
       });
-      Spawner.god.create('Clipboard', null, null, {
-        steps: [ 
-          ["Need Ephidrine Stat!", "syringe", "Ephidrine"],
-          ["Inject Paradoxamol!", "syringe", "Paradoxamol"],
-          ]
-      });
+
+      
+
+
+
+      for (userId in User.me.team)
+      {
+        Spawner.god.create('Clipboard', userId, null, {
+          steps: [ 
+            _randomStep(),
+            _randomStep(),
+            _randomStep(),
+            ]
+        }); 
+      }
     }
     _switch_to('Play');
+  }
+
+  private function _randomStep()
+  {
+    var i = Std.int(Math.random() * (_steps.length - 1));
+    return _steps[i];
   }
 
   private function _state_play()
