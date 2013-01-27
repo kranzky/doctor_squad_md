@@ -2,6 +2,7 @@ package com.squad.dr.tools;
 import com.squad.dr.widgets.HoldButton;
 import com.squad.dr.widgets.Widget;
 import org.flixel.FlxSprite;
+import org.flixel.FlxButton;
 import com.squad.dr.PubNub;
 
 class Suction extends Widget
@@ -33,6 +34,16 @@ class Suction extends Widget
   public override function update()
   {
     super.update();
+    if (_suctionButton.status == FlxButton.NORMAL)
+    {  
+      _progbar.alpha = 0;
+      _progbarOuter.alpha = 0;
+    }
+    else
+    {
+      _progbar.alpha = 1;
+      _progbarOuter.alpha = 1;
+    }
     var percent = _suctionButton.getHeldTime() * 100.0 / _suctionTime;
     _progbar.scale.x = percent/100.0;
     //_suctionButton.label.text = _labelBase + "(" + percent + ")";
