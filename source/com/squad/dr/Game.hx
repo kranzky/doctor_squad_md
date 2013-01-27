@@ -15,7 +15,7 @@ class Game
         ["Inject Paradoxamol!", "syringe", "Paradoxamol"],
         ["Need Adrenaline Stat!", "syringe", "Adrenaline"],
         ["Incision", "scalpel", ""],
-        ["Bloodspurt! I need suction! STAT!", "suction", "complete"]
+        ["Bloodspurt! I need suction! STAT!", "suction", "complete"],
         ["Security Clearance 800813", "passcode", "800813"],
         ["Security Clearance 776776", "passcode", "776776"],
         ["Security Clearance 123456", "passcode", "123456"]
