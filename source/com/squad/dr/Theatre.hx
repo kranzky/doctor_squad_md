@@ -20,11 +20,9 @@ class Theatre extends FlxState
 
   override public function create():Void
   {
-    #if !neko
-    FlxG.bgColor = 0xffaabbee;
-    #else
-    FlxG.bgColor = {rgb: 0xaabbee, a: 0xff};
-    #end
+    var background:FlxSprite = new FlxSprite(0,0, "assets/dr/Background3a.png");
+    background.scale.x = background.scale.y = 0.5;
+    add(background);
 
     fore = new FlxGroup();
     mid  = new FlxGroup();

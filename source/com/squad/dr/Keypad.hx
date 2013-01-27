@@ -21,6 +21,7 @@ class Keypad extends FlxGroup
     super();
     DrSquad.log("new keypad");
     _display = new FlxText(x, y, 300, _prompt);
+    _display.setColor( 0xffff00 );
     _display.size = 18;
     _updateUI();
     add(_display);

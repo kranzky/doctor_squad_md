@@ -33,9 +33,9 @@ class WaitingRoom extends FlxState
 
       //create a button with the label Start and set an on click function
     _startButton = new FlxButton(240, 320, "START", _onStartClick);
-    _playersLabel = new FlxText(50, 100, 360, "");
+    _playersLabel = new FlxText(00, 150, 640, "");
     _playersLabel.size = 16;
-    _messageLabel = new FlxText(50, 150, 360, "Rolling for initiative..." );
+    _messageLabel = new FlxText(00, 100, 640, "Welcome to Waiting Room #" + PubNub.room.get_channel() + "..." );
     _messageLabel.size = 16;
 
     add(_playersLabel);
@@ -111,11 +111,11 @@ class WaitingRoom extends FlxState
       {
         DrSquad.log( "I'm not the boss :(" );
         remove(_startButton);
-        _messageLabel.text = "Button? Button? Who's got the button?";
+        _messageLabel.text = "Waiting for the head honcho...";
       }
       if (User.me.team.length > 0)
       {
-        _playersLabel.text = "Players Ready to rock: " + User.me.team.length;
+        _playersLabel.text = "Doctor squad size: " + User.me.team.length;
       }
 
     }
