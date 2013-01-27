@@ -3,11 +3,16 @@ package com.squad.dr;
 import org.flixel.FlxG;
 import org.flixel.FlxState;
 import org.flixel.FlxSprite;
+import org.flixel.FlxPoint;
 
 
 class Splash extends FlxState
 {
-  private var _timeToStart:Float;
+  private var _remainingTime:Float;
+  private var _doneSplash:Bool;
+
+  private var kSplashTime:Float = 2.0;
+
 
   override public function create():Void
   {
@@ -19,7 +24,7 @@ class Splash extends FlxState
     logo.loadGraphic("assets/dr/rocketlabs.png");
     add(logo);
 
-    _timeToStart = 2.0;
+    _remainingTime = kSplashTime;
   }
 
   override public function destroy():Void
@@ -31,13 +36,19 @@ class Splash extends FlxState
   {
     super.update();
 
-    _timeToStart -= FlxG.elapsed;
+    _remainingTime -= FlxG.elapsed;
 
-    if (_timeToStart < 0.0)
+    if (_remainingTime < 0.0)
     {
-      trace("Finished splash screen");
-      FlxG.switchState(new Lobby());
+      if (!_doneSplash)
+      {
+        _doneSplash = true;
+        trace("Finished splash screen, moving to menu");
+        FlxG.switchState(new Menu());
+      }
     }
   }
 
 }
+
+
