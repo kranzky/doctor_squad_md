@@ -14,7 +14,8 @@ class Game
         ["Need Ephidrine Stat!", "syringe", "Ephidrine"],
         ["Inject Paradoxamol!", "syringe", "Paradoxamol"],
         ["Need Adrenaline Stat!", "syringe", "Adrenaline"],
-        ["Incision", "scalpel", ""]
+        ["Incision", "scalpel", ""],
+        ["Bloodspurt! I need suction! STAT!", "suction", "complete"]
       ];
 
   public function new()
@@ -49,6 +50,11 @@ class Game
   {
     if (User.me.is_boss) {
       Spawner.god.create('Generator', null, null, {});
+      Spawner.god.create('Suction', null, null, {
+        x: 200,
+        y: 200,
+        local: true
+      });
       Spawner.god.create('Scalpel', User.randomPlayer(), null, {
         x: 400,
         y: 400,
