@@ -205,20 +205,7 @@ class PubNub
       var base = Thread.readMessage(true);
       var pub_msg:PubMsg = Thread.readMessage(true);
       var url = base + Json.stringify(pub_msg);
-      var client = new haxe.Http(url);
-      var success = false;
-      client.setHeader('Accept', 'application/json');
-      client.noShutdown = true;
-      client.onError = function(error) {
-        DrSquad.log("PUB ERROR : " + Std.string(error) + " : " + pub_msg);
-        success = false;
-      };
-      client.onData = function(data) {
-        success = true;
-      };
-      while (!success) {
-        client.request(false);
-      }
+      var response = haxe.Http.requestUrl(url);
     });
     thread.sendMessage(base);
     return thread;
@@ -233,21 +220,13 @@ class PubNub
       var regex_response = ~/^\[\[(.*)\],"(.*)"\]$/;
       while(true) {
         var url = base + time_token;
-        var client = new haxe.Http(url);
-        client.setHeader('Accept', 'application/json');
-        client.noShutdown = true;
-        client.onError = function(error) {
-          DrSquad.log("SUB ERROR : " + Std.string(error));
-        };
-        client.onData = function(data) {
-          regex_response.match(data);
-          time_token = regex_response.matched(2);
-          var payload = regex_response.matched(1);
-          if (payload.length > 2) {
-            main.sendMessage(payload);
-          }
-        };
-        client.request(false);
+        var response = haxe.Http.requestUrl(url);
+        regex_response.match(response);
+        time_token = regex_response.matched(2);
+        var payload = regex_response.matched(1);
+        if (payload.length > 2) {
+          main.sendMessage(payload);
+        }
       }
     });
     thread.sendMessage(Thread.current());
