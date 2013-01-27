@@ -58,7 +58,7 @@ class Generator extends Widget
         });
         if (_power > 0)
         {
-            _power = _power - (FlxG.elapsed*2);
+            _power = _power - (FlxG.elapsed*0.5);
             if (_power < 0)
             {
                 _power = 0.0;
