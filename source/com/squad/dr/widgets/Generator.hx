@@ -26,8 +26,8 @@ class Generator extends Widget
         _darkness.makeGraphic(FlxG.width, FlxG.height, 0xff000000); //colours are ARGB
         //_darkness.blend = nme.display.BlendMode.SCREEN;
 
-        attributes.x = 40;
-        attributes.y = 600;
+        attributes.x = 0;
+        attributes.y = 550;
         _button = new Button(attributes.x, attributes.y, "Generator", buttonPushed);
         //_button.loadGraphic( "assets/dr/square_button.png", false, false, 45, 45);
         //_button.loadGraphic( "assets/dr/Buttons-11.png", false, false, 45, 45);

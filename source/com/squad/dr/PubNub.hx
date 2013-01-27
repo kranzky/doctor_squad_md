@@ -20,7 +20,6 @@ class Observer
 
   private var _pub_msg:PubMsg;
   private var _queue:Array<PubMsg>;
-
   private static var _next_key:Int = 0;
 
   public function new(pub_msg:PubMsg)
@@ -79,19 +78,18 @@ class Observer
 
 class PubNub
 {
-  private var _sub_thread:Thread;
-  private var _pub_url:String;
-  private var _channel:String;
   private var _observers:FastList<Observer>;
-
+  private var _queue:Array<PubMsg>;
   private static var _is_valid:Bool;
   public static var room(_get_a_room, null):PubNub;
+  private var _channel:String;
   public function new():Void
   {
     if (!_is_valid) {
       throw "Don't create PubNub directly, silly. Get a room.";
     }
     _observers = new FastList<Observer>();
+    _queue = new Array<PubMsg>();
   }
   private static function _get_a_room():PubNub
   {
@@ -111,33 +109,15 @@ class PubNub
   // ref: http://www.pubnub.com/tutorial/http-rest-push-api
   public function set_channel(channel)
   {
-    var service = "http://pubsub.pubnub.com";
-    var pub_key = "pub-c-0834dc19-81c6-4378-9ab7-db3d457d9472";
-    var sub_key = "sub-c-132a21ec-66ec-11e2-903d-12313f022c90";
-
-    _sub_thread = _create_subscriber(service+"/subscribe/"+sub_key+"/"+channel+"/0/");
-    _pub_url = service+"/publish/"+pub_key+"/"+sub_key+"/0/"+channel+"/0/";
     _channel = channel;
   }
 
-  // TODO: sending spawns a new thread. This is because a single thread can't
-  // process a rapid succession of sends quickly enough, so they get buffered
-  // up significantly, which causes a massive delay. Brad saw this last night
-  // just before we left. It's fixed now, but rather than creating a new thread
-  // each call, we should round-robin to a thread pool.
   public function send(pub_msg:PubMsg):Void
   {
-    //stub out the network with this!
-    // for (observer in _observers) {
-    //   observer.notify(pub_msg);
-    // }
-    // return;
-
     if (_channel == null) {
       throw "Set the channel first.";
     }
-    var pub_thread = _create_publisher(_pub_url);
-    pub_thread.sendMessage(pub_msg);
+    _queue.push(pub_msg);
   }
 
   // TODO: we should pass a Json object back to notify instead of a string, but
@@ -150,20 +130,15 @@ class PubNub
     if (_channel == null) {
       throw "Set the channel first.";
     }
-    var regex_content = ~/^(\{.*?\}),(\{.*)$/;
-    var message = Thread.readMessage(false);
-    while (message != null) {
-      while(true) {
-          if (regex_content.match(message)) {
-            _notify_observers(regex_content.matched(1));
-            message = regex_content.matched(2);
-          } else {
-            _notify_observers(message);
+    _queue.reverse();
+    var sub_msg:PubMsg;
+    while (true) {
+      sub_msg = _queue.pop();
+      if (sub_msg == null) {
             break;
           }
+      _notify_observers(sub_msg);
         }
-      message = Thread.readMessage(false);
-    }
   }
 
   public function register(pub_msg:PubMsg):Int
@@ -191,67 +166,10 @@ class PubNub
     }
   }
 
-  private function _notify_observers(message:String):Void
+  private function _notify_observers(pub_msg:PubMsg):Void
   {
-    var pub_msg:PubMsg = Json.parse(message);
     for (observer in _observers) {
       observer.notify(pub_msg);
     }
-  }
-
-  static private function _create_publisher(base):Thread
-  {
-    var thread = Thread.create(function():Void {
-      var base = Thread.readMessage(true);
-      var pub_msg:PubMsg = Thread.readMessage(true);
-      var url = base + Json.stringify(pub_msg);
-      var client = new haxe.Http(url);
-      var success = false;
-      client.setHeader('Accept', 'application/json');
-      client.noShutdown = true;
-      client.onError = function(error) {
-        DrSquad.log("PUB ERROR : " + Std.string(error) + " : " + pub_msg);
-        success = false;
-      };
-      client.onData = function(data) {
-        success = true;
-      };
-      while (!success) {
-        client.request(false);
-      }
-    });
-    thread.sendMessage(base);
-    return thread;
-  }
-
-  static private function _create_subscriber(base):Thread
-  {
-    var thread = Thread.create(function():Void {
-      var main:Thread = Thread.readMessage(true);
-      var base = Thread.readMessage(true);
-      var time_token = "0";
-      var regex_response = ~/^\[\[(.*)\],"(.*)"\]$/;
-      while(true) {
-        var url = base + time_token;
-        var client = new haxe.Http(url);
-        client.setHeader('Accept', 'application/json');
-        client.noShutdown = true;
-        client.onError = function(error) {
-          DrSquad.log("SUB ERROR : " + Std.string(error));
-        };
-        client.onData = function(data) {
-          regex_response.match(data);
-          time_token = regex_response.matched(2);
-          var payload = regex_response.matched(1);
-          if (payload.length > 2) {
-            main.sendMessage(payload);
-          }
-        };
-        client.request(false);
-      }
-    });
-    thread.sendMessage(Thread.current());
-    thread.sendMessage(base);
-    return thread;
   }
 }
