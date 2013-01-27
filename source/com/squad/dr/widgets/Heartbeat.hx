@@ -17,6 +17,7 @@ class Heartbeat extends FlxSprite
   private var _time:Float;
   private var _frequency:Float = 7.5;
   private var _flatlining:Bool;
+  private var _listen_key:Int = 0;
 
   private var kOffsetX:Float = 600.0;
   private var kOffsetY:Float = 100.0;
@@ -29,9 +30,10 @@ class Heartbeat extends FlxSprite
 
     trace("heartbeat new");
     makeGraphic(640, 200, 0xff000000); //colours are ARGB
-
     _path = new FlxPath();   
     _path.ignoreDrawDebug = false; 
+
+    _listen_key = PubNub.room.register({type: "clipboard"});
 
     _audioBeatTime = 0.0;
     _beatSound = new FlxSound();
@@ -100,6 +102,7 @@ class Heartbeat extends FlxSprite
 
   public override function destroy():Void
   {
+    PubNub.room.deregister(_listen_key);
     super.destroy();
   }
 

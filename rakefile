@@ -4,10 +4,22 @@ task :android do
   exec("nme test drsquad.nmml android -debug")
 end
 
+task :windows do
+  exec("nme test drsquad.nmml windows -release")
+end
+
+task :linux do
+  exec("nme test drsquad.nmml linux -release")
+end
+
+task :iphone do
+  exec("nme test drsquad.nmml iphone -release")
+end
+
 task :mac do
-  exec("nme test drsquad.nmml mac -debug")
+  exec("nme test drsquad.nmml mac -release")
 end
 
 task :flash do
-  exec("nme test drsquad.nmml flash -debug")
+  exec("nme test drsquad.nmml flash -release")
 end
