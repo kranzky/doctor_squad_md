@@ -9,6 +9,7 @@ class Game
   var _frame:Float;
   var _timer:Float;
   var _state:String;
+  var _spawn_index:Int = 0;
 
   private static var _steps:Array<Array<String>> = [
         ["Need Ephidrine Stat!", "syringe", "Ephidrine"],
@@ -45,6 +46,7 @@ class Game
   private function _state_start()
   {
     if (_timer > 2.0) {
+      _spawn_index = 0;
       _switch_to('Spawn');
     }
   }
@@ -52,35 +54,56 @@ class Game
   private function _state_spawn()
   {
     if (User.me.is_boss) {
-      Spawner.god.create('Generator', null, null, {});
-        //x: 400,
-        //y: 300,
-        //local: false
-        //});
-      Spawner.god.create('Suction', null, null, {
-        x: 40,
-        y: 300,
-        local: true
-      });
-      Spawner.god.create('Scalpel', User.randomPlayer(), null, {
-        x: 200,
-        y: 300,
-        local: true
-      });
-      Spawner.god.create('Syringe', User.randomPlayer(), null, {
-        x: 400,
-        y: 400,
-        drugs: ["Adrenaline", "Ephidrine", "Paradoxamol"],
-        local: true
-      });
-      Spawner.god.create('Passcode', User.randomPlayer(), null, {
-        x: 300,
-        y: 600,
-        local: true
-      });
+      if (_timer > 0.2) {
+        if (!_spawn_something()) {
+          _switch_to('Play');
+        }
+      }
+    } else {
+      _switch_to('Play');
+    }
+  }
 
-      for (userId in User.me.team)
-      {
+  private function _spawn_something():Bool
+  {
+    switch(_spawn_index) {
+      case 0:
+        Spawner.god.create('Generator', null, null, {});
+          //x: 400,
+          //y: 300,
+          //local: false
+          //});
+      case 1:
+        Spawner.god.create('Suction', null, null, {
+          x: 40,
+          y: 300,
+          local: true
+        });
+      case 2:
+        Spawner.god.create('Scalpel', User.randomPlayer(), null, {
+          x: 200,
+          y: 300,
+          local: true
+        });
+      case 3:
+        Spawner.god.create('Syringe', User.randomPlayer(), null, {
+          x: 400,
+          y: 400,
+          drugs: ["Adrenaline", "Ephidrine", "Paradoxamol"],
+          local: true
+        });
+      case 4:
+        Spawner.god.create('Passcode', User.randomPlayer(), null, {
+          x: 300,
+          y: 600,
+          local: true
+        });
+      default:
+        var index = _spawn_index - 5;
+        if (index >= User.me.team.length) {
+          return false;
+        }
+        var userId = User.me.team[index];
         Spawner.god.create('Clipboard', userId, null, {
           steps: [ 
             _randomStep(),
@@ -96,9 +119,9 @@ class Game
             ],
           local: true
         }); 
-      }
     }
-    _switch_to('Play');
+    _spawn_index += 1;
+    return true;
   }
 
   private function _randomStep()
