@@ -47,7 +47,7 @@ class Clipboard extends Widget
     _messageLabel.size = 12;
     add(_messageLabel);
 
-    _successLabel = new FlxText(200, 175, 340, "" );
+    _successLabel = new FlxText(200, 175, 540, "" );
     _successLabel.size = 12;
     _successLabel.setColor( 0x00ff00 );
     add(_successLabel);
