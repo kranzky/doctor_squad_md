@@ -20,6 +20,7 @@ class Clipboard extends Widget
   private var _messageLabel:FlxText;
   private var _finished:Bool=false;
   private var _attrSteps: Array<Dynamic>;
+  private var _listen_key:Int = 0;
 
   public override function initialise(attributes:Dynamic)
   {
@@ -36,19 +37,8 @@ class Clipboard extends Widget
       _steps.push(s);
     }
 
-    // TODO deregister callback
-    PubNub.room.register({type: "tool"}, function(message) {
-      trace( "message" );
-      trace( message );
-      trace( "_steps[_currentStep]" );
-      trace( _steps[_currentStep] );
-      if (message.action == _steps[_currentStep].action &&
-          _steps[_currentStep].data == "" || _steps[_currentStep].data == message.data )
-      { 
-        trace("Good Job!");
-        _stepComplete();
-      }
-    });
+    _listen_key = PubNub.room.register({type: "tool"});
+
     _messageLabel = new FlxText(0, 0, 4800, "Your tasklist..." );
     _messageLabel.size = 12;
     add(_messageLabel);
@@ -56,7 +46,7 @@ class Clipboard extends Widget
     _updateUI();
   }
 
-  
+
   private function _stepComplete() {
     PubNub.room.send({type: "clipboard", action: "stepcomplete", widgetId: _widgetId, data: _steps[_currentStep].message});
     if (_steps.length > _currentStep+1) {
@@ -79,6 +69,24 @@ class Clipboard extends Widget
   public override function update()
   {
     super.update();
+    PubNub.room.consume(_listen_key, function(message) {
+      trace( "message" );
+      trace( message );
+      trace( "_steps[_currentStep]" );
+      trace( _steps[_currentStep] );
+      if (message.action == _steps[_currentStep].action &&
+          _steps[_currentStep].data == "" || _steps[_currentStep].data == message.data )
+      {
+        trace("Good Job!");
+        _stepComplete();
+      }
+    });
+  }
+
+  public override function destroy()
+  {
+    PubNub.room.deregister(_listen_key);
+    super.destroy();
   }
 
 }

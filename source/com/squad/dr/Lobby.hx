@@ -38,7 +38,7 @@ class Lobby extends FlxState
       var keypad = new Keypad(200, 200, function(room) {
         PubNub.room.set_channel(room);
         FlxG.switchState(new WaitingRoom());
-        });
+        }, "Room Number");
 
       add(keypad);
 
@@ -54,7 +54,6 @@ class Lobby extends FlxState
 
     override public function destroy():Void
     {
-      PubNub.room.clear();
       super.destroy();
     }
 
