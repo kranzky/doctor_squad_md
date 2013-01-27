@@ -1,5 +1,7 @@
 package com.squad.dr;
 
+import com.squad.dr.widgets.Button;
+
 import org.flixel.FlxG;
 import org.flixel.FlxState;
 import org.flixel.FlxSprite;
@@ -21,7 +23,7 @@ class About extends FlxState
     add(logo);
 
 
-    add(new FlxButton(280, 760, "So Wow", _onDoneClick));
+    add(new Button(200, 620, "Back", _onDoneClick));
   }
 
   override public function destroy():Void
