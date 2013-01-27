@@ -8,6 +8,7 @@ import com.squad.dr.tools.Scalpel;
 import com.squad.dr.tools.Syringe;
 import com.squad.dr.tools.Suction;
 import com.squad.dr.widgets.Clipboard;
+import com.squad.dr.widgets.Passcode;
 
 class Spawner
 {
@@ -30,18 +31,19 @@ class Spawner
   }
 
   private var _world:FlxState;
-  private var _key:Int;
+  private var _listen_key:Int;
 
   public function oversee(world:FlxState)
   {
     _world = world;
-    _key = PubNub.room.register({type: 'GOD'}, _process);
+    PubNub.room.deregister(_listen_key);
+    _listen_key = PubNub.room.register({type: 'GOD'});
   }
 
-  public function abandon(world:FlxState)
+  public function abandon()
   {
     _world = null;
-    PubNub.room.deregister(_key);
+    PubNub.room.deregister(_listen_key);
   }
 
   public function create(type, owner_id:Null<Int>, widget_id:Null<Int>, attributes) {
@@ -59,6 +61,11 @@ class Spawner
       ownerId: owner_id,
       widgetId: widget_id
     });
+  }
+
+  public function update()
+  {
+    PubNub.room.consume(_listen_key, _process);
   }
 
   private function _process(message)
@@ -81,6 +88,8 @@ class Spawner
         _world.add(new Suction(widget_id, owner_id, attributes));
       case 'Clipboard':
         _world.add(new Clipboard(widget_id, owner_id, attributes));
+      case 'Passcode':
+        _world.add(new Passcode(widget_id, owner_id, attributes));
     }
   }
 

@@ -10,13 +10,17 @@ class Keypad extends FlxGroup
   private var _display:FlxText;
   private var _value:String = "";
   private var _callback:String -> Void;
+  private var _prompt:String;
+  private var _numDigits:Int;
 
-  public function new(x, y, callback_)
+  public function new(x, y, callback_, prompt, numDigits=6)
   {
     _callback = callback_;
+    _prompt = prompt;
+    _numDigits = numDigits;
     super();
     trace("new keypad");
-    _display = new FlxText(x, y, 300, "RARA");
+    _display = new FlxText(x, y, 300, _prompt);
     _display.size = 18;
     _updateUI();
     add(_display);
@@ -38,18 +42,19 @@ class Keypad extends FlxGroup
       }
       button = new PxButton(x+((i+ii)%3)*45, y+50+Std.int(i/3)*45, s, 
         function() {
-          if (_value.length < 6)
+          if (_value.length < _numDigits)
           {
             _value += s;
             _updateUI();
           
-            if (_value.length == 6)
+            if (_value.length == _numDigits)
             {
               trace("DONE: " + _value);
               if (_callback != null)
               {
                 _callback( _value );
               }
+              _value = "";
             }
           }
         });
@@ -66,7 +71,7 @@ class Keypad extends FlxGroup
   {
     if( _value == "")
     {
-      _display.text = "Room Number";
+      _display.text = _prompt;
     } 
     else
     {

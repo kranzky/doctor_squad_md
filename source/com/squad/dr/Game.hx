@@ -16,6 +16,9 @@ class Game
         ["Need Adrenaline Stat!", "syringe", "Adrenaline"],
         ["Incision", "scalpel", ""],
         ["Bloodspurt! I need suction! STAT!", "suction", "complete"]
+        ["Security Clearance 800813", "passcode", "800813"],
+        ["Security Clearance 776776", "passcode", "776776"],
+        ["Security Clearance 123456", "passcode", "123456"]
       ];
 
   public function new()
@@ -66,11 +69,23 @@ class Game
         drugs: ["Adrenaline", "Ephidrine", "Paradoxamol"],
         local: true
       });
+      Spawner.god.create('Passcode', User.randomPlayer(), null, {
+        x: 200,
+        y: 600,
+        local: true
+      });
 
       for (userId in User.me.team)
       {
         Spawner.god.create('Clipboard', userId, null, {
           steps: [ 
+            _randomStep(),
+            _randomStep(),
+            _randomStep(),
+            _randomStep(),
+            _randomStep(),
+            _randomStep(),
+            _randomStep(),
             _randomStep(),
             _randomStep(),
             _randomStep(),
