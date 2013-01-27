@@ -74,12 +74,18 @@ class User
     return name;
   }
 
+  private static var player_index:Int = -1;
   public static function randomPlayer():Int
   {
-    var i = Std.int(Math.random() * User.me.team.length);
-    if (i > User.me.team.length-1)
-      i = User.me.team.length - 1;
-    return User.me.team[i];
+    if (player_index < 0) {
+      player_index = Std.int(Math.random() * User.me.team.length);
+    } else {
+      player_index += 1;
+    }
+    if (player_index >= User.me.team.length) {
+      player_index = 0;
+    }
+    return User.me.team[player_index];
   }
 
   public static function choose( array:Array<String> ) {
