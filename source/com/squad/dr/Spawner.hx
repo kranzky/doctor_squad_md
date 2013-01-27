@@ -76,6 +76,8 @@ class Spawner
         _world.add(new Scalpel(widget_id, owner_id, attributes));
       case 'Syringe':
         _world.add(new Syringe(widget_id, owner_id, attributes));
+      case 'Clipboard':
+        _world.add(new Clipboard(widget_id, owner_id, attributes));
     }
   }
 

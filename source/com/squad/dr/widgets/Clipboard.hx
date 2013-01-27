@@ -24,12 +24,16 @@ class Clipboard extends Widget
   {
     _steps = new Array<Step>();
 
-    var step = {
-      message: "Inject Adrenaline",
-      action:  "syringe",
-      data:    "Adrenaline"
+    var steps = attributes.steps;
+    for (step in steps)
+    {
+      var step = {
+        message: step[0],
+        action:  step[1],
+        data:    step[2]
+      }
+      _steps.push(step);
     }
-    _steps.push(step);
 
     step = {
       message: "Inject Ephidrine",

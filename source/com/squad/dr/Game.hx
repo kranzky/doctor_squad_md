@@ -50,6 +50,12 @@ class Game
         y: 400,
         drugs: ["Adrenaline", "Ephidrine", "Paradoxamol"]
       });
+      Spawner.god.create('Clipboard', null, null, {
+        steps: [ 
+          ["Need Ephidrine Stat!", "syringe", "Ephidrine"],
+          ["Inject Paradoxamol!", "syringe", "Paradoxamol"],
+          ]
+      });
     }
     _switch_to('Play');
   }
