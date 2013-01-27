@@ -1,6 +1,7 @@
 package com.squad.dr.widgets;
 
 import org.flixel.FlxButton;
+import org.flixel.FlxSound;
 import com.squad.dr.PubNub;
 
 class Button extends FlxButton
@@ -60,6 +61,12 @@ class Button extends FlxButton
   public function _pushed()
   {
     DrSquad.log("button callback fired");
+
+    trace("Beep");
+    var beep = new FlxSound();
+    beep.loadEmbedded("Beep", false, false);
+    beep.play();
+
     updateState();
     if (_buttoncallback != null)
       _buttoncallback();

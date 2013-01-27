@@ -4,7 +4,9 @@ import nme.Lib;
 import org.flixel.FlxGroup;
 import org.flixel.plugin.pxText.PxButton;
 import org.flixel.FlxText;
-  
+import org.flixel.FlxSound;
+
+
 class Keypad extends FlxGroup
 { 
   private var _display:FlxText;
@@ -42,6 +44,11 @@ class Keypad extends FlxGroup
       }
       button = new PxButton(x+((i+ii)%3)*45, y+50+Std.int(i/3)*45, s, 
         function() {
+          
+          var beep = new FlxSound();
+          beep.loadEmbedded("Beep", false, false);
+          beep.play();
+
           if (_value.length < _numDigits)
           {
             _value += s;
