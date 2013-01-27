@@ -7,19 +7,17 @@ import com.squad.dr.PubNub;
 
 class Widget extends FlxGroup
 {
-  public var _canInteract:Bool;
   private var _widgetId:Int;
   private var _ownerId:Int;
 
   private var x = 0;
   private var y = 0;
 
-  public function new(widgetId = null, ownerId = null, canInteract = false)
+  public function new(widgetId = null, ownerId = null)
   {
     super();
     _widgetId = widgetId;
     _ownerId = ownerId;
-    _canInteract = canInteract;
     initialise();
   }
 

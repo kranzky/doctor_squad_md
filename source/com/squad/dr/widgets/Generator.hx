@@ -21,14 +21,17 @@ class Generator extends Widget
         var y = 100;
         _darkness = new FlxSprite(0, 0);
         _darkness.makeGraphic(FlxG.width, FlxG.height, 0xff000000); //colours are ARGB
-        //_darkness.fill(0x0000ff);
-        _darkness.blend = nme.display.BlendMode.SCREEN;
+        //_darkness.blend = nme.display.BlendMode.SCREEN;
 
-        _button = new Button(x, y, "Generator", buttonPushed, _canInteract);
+        _button = new Button(x, y, "Generator", buttonPushed);
         _button.loadGraphic( "assets/dr/square_button.png", false, false, 45, 45);
         _power = 30.0;
+        if (is_owner())
+        {
+          add(_button);
+        }
+        
         add(_darkness);
-        add(_button);
         updateState();
 
         PubNub.room.register({widgetId: _widgetId}, function(message) {
@@ -42,11 +45,10 @@ class Generator extends Widget
     private function _updatePower(power):Void
     {
         if (!is_owner()) {
-            return;
+            _power = power;
+            trace("Generator received power " + _power);
+            updateState();
         }
-        _power = power;
-        trace("Generator received power " + _power);
-        updateState();
     }
 
     public override function update()
@@ -74,7 +76,7 @@ class Generator extends Widget
     private function _sendPowerLevel( )
     {
         trace("Sending power " + _power);
-        //send( "power", "" + _power );
+        PubNub.room.send({type: "generator", action: "power", widgetId: _widgetId, data: _power+""});
         updateState();
     }
 

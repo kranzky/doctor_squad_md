@@ -4,6 +4,9 @@ import org.flixel.FlxState;
 
 import com.squad.dr.widgets.Widget;
 import com.squad.dr.widgets.Generator;
+import com.squad.dr.tools.Scalpel;
+import com.squad.dr.tools.Syringe;
+import com.squad.dr.widgets.Clipboard;
 
 class Spawner
 {
@@ -64,6 +67,10 @@ class Spawner
     switch(type) {
       case 'Generator':
         _world.add(new Generator(widget_id, owner_id));
+      case 'Syringe':
+        _world.add(new Syringe(widget_id, owner_id, 400,400, ["Adrenaline", "Ephidrine", "Paradoxamol"]));
+      case 'Clipboard':
+        _world.add(new Clipboard(widget_id, owner_id));
     }
   }
 

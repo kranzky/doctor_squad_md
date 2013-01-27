@@ -4,9 +4,9 @@ import com.squad.dr.PubNub;
 
 class Scalpel extends Tool
 {
-  public function new(widgetId, owned, canInteract, X, Y)
+  public function new(widgetId, ownerId, canInteract, X, Y)
   {
-    super(widgetId, owned, canInteract, X, Y, "assets/dr/tools/scalpel.png", "Scalpel");
+    super(widgetId, ownerId, X, Y, "assets/dr/tools/scalpel.png", "Scalpel");
   }
 
   public override function onToolClick(): Void

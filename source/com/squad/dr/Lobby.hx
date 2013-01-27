@@ -46,12 +46,12 @@ class Lobby extends FlxState
     //tb = Toolbar.getInstance();
     //add(tb);
 
-    var s = new Scalpel(2, true, true, 400, 400);
-    //tb.addTool(s);
-    var sy = new Syringe(3, true, true, 200, 400, ["Adrenaline", "Ephidrine", "Paradoxamol"]);
-    //tb.addTool(sy);
-    add(s);
-    add(sy);
+    // var s = new Scalpel(2, true, true, 400, 400);
+    // //tb.addTool(s);
+    // var sy = new Syringe(3, true, true, 200, 400, ["Adrenaline", "Ephidrine", "Paradoxamol"]);
+    // //tb.addTool(sy);
+    // add(s);
+    // add(sy);
   }
 
   //The on click handler for the start button

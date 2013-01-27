@@ -39,9 +39,9 @@ class Game
   private function _state_spawn()
   {
     if (User.me.is_boss) {
-      Spawner.god.create('Generator');
-      Spawner.god.create('Scalpel');
-      Spawner.god.create('Syringe');
+      Spawner.god.create('Generator', User.randomPlayer());
+      Spawner.god.create('Clipboard', User.randomPlayer());
+      Spawner.god.create('Syringe', User.randomPlayer());
     }
     _switch_to('Play');
   }
