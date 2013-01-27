@@ -17,7 +17,8 @@ class Game
         ["Incision", "scalpel", ""],
         ["Security Clearance 800813", "passcode", "800813"],
         ["Security Clearance 776776", "passcode", "776776"],
-        ["Security Clearance 123456", "passcode", "123456"]
+        ["Security Clearance 123456", "passcode", "123456"],
+        ["CLEAR!!!!!!!!!", "shock", ""]
       ];
 
   public function new()
@@ -54,6 +55,11 @@ class Game
       Spawner.god.create('Generator', null, null, {});
       Spawner.god.create('Scalpel', User.randomPlayer(), null, {
         x: 400,
+        y: 400,
+        local: true
+      });
+      Spawner.god.create('Shock', User.randomPlayer(), null, {
+        x: 300,
         y: 400,
         local: true
       });

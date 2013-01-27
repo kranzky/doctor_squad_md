@@ -29,12 +29,19 @@ class Heartbeat extends FlxSprite
     makeGraphic(640, 200, 0xff000000); //colours are ARGB
     _path = new FlxPath();   
     _path.ignoreDrawDebug = false; 
-    _listen_key = PubNub.room.register({type: "clipboard"});
+    _listen_key = PubNub.room.register({});
   }
 
   public override function update():Void
   {
     super.update();
+
+    PubNub.room.consume(_listen_key, function(message) {
+      if (message.type == "tool" && message.action == "shock")
+        beat();
+      else if (message.type == "clipboard" && message.action == "stepfailed")
+        flatline();
+      });
 
     _time += FlxG.elapsed;
     if (_time > Math.PI / 5.0)

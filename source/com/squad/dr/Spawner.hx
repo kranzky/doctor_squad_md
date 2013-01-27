@@ -6,6 +6,7 @@ import com.squad.dr.widgets.Widget;
 import com.squad.dr.widgets.Generator;
 import com.squad.dr.tools.Scalpel;
 import com.squad.dr.tools.Syringe;
+import com.squad.dr.tools.Shock;
 import com.squad.dr.widgets.Clipboard;
 import com.squad.dr.widgets.Passcode;
 
@@ -89,6 +90,8 @@ class Spawner
         _world.mid.add(new Clipboard(widget_id, owner_id, attributes));
       case 'Passcode':
         _world.back.add(new Passcode(widget_id, owner_id, attributes));
+      case 'Shock':
+        _world.back.add(new Shock(widget_id, owner_id, attributes));
     }
   }
 

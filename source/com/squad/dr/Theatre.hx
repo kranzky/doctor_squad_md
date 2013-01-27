@@ -16,6 +16,7 @@ class Theatre extends FlxState
   public var fore:FlxGroup;
   public var mid:FlxGroup;
   public var back:FlxGroup;
+  public var _heartbeat:Heartbeat;
 
   override public function create():Void
   {
@@ -36,8 +37,8 @@ class Theatre extends FlxState
     Spawner.god.oversee(this);
     _game = new Game();
 
-    var heartbeat = new Heartbeat(0,0);
-    back.add(heartbeat);
+    _heartbeat = new Heartbeat(0,0);
+    back.add(_heartbeat);
   }
 
   override public function update():Void
