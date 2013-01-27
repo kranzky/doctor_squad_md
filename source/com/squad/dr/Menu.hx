@@ -14,7 +14,7 @@ class Menu extends FlxState
 
   override public function create():Void
   {
-    trace("showing menu screen");
+    DrSquad.log("showing menu screen");
     FlxG.mouse.show();
     FlxG.bgColor = 0xffffffff;
 

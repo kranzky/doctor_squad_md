@@ -109,7 +109,7 @@ class Game
 
   private function _switch_to(state)
   {
-    trace("GAME STATE : " + state);
+    DrSquad.log("GAME STATE : " + state);
     _timer = 0.0;
     _state = state;
   }

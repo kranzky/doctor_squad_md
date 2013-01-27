@@ -10,7 +10,7 @@ class Passcode extends Widget
 {
     public override function initialise(attributes:Dynamic)
     {
-      trace("new passcode");
+      DrSquad.log("new passcode");
 
       //add the entry keypad
       var keypad = new Keypad(attributes.x, attributes.y, function(code) {

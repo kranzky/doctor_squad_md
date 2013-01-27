@@ -127,6 +127,12 @@ class PubNub
   // each call, we should round-robin to a thread pool.
   public function send(pub_msg:PubMsg):Void
   {
+    //stub out the network with this!
+    // for (observer in _observers) {
+    //   observer.notify(pub_msg);
+    // }
+    // return;
+
     if (_channel == null) {
       throw "Set the channel first.";
     }
@@ -204,7 +210,7 @@ class PubNub
       client.setHeader('Accept', 'application/json');
       client.noShutdown = true;
       client.onError = function(error) {
-        trace("PUB ERROR : " + Std.string(error) + " : " + pub_msg);
+        DrSquad.log("PUB ERROR : " + Std.string(error) + " : " + pub_msg);
         success = false;
       };
       client.onData = function(data) {
@@ -231,7 +237,7 @@ class PubNub
         client.setHeader('Accept', 'application/json');
         client.noShutdown = true;
         client.onError = function(error) {
-          trace("SUB ERROR : " + Std.string(error));
+          DrSquad.log("SUB ERROR : " + Std.string(error));
         };
         client.onData = function(data) {
           regex_response.match(data);

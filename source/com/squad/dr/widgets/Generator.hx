@@ -17,7 +17,7 @@ class Generator extends Widget
 
     public override function initialise(attributes:Dynamic)
     {
-        trace("new generator");
+        DrSquad.log("new generator");
         var x = 100;
         var y = 100;
         _darkness = new FlxSprite(0, 0);
@@ -42,7 +42,7 @@ class Generator extends Widget
     {
         if (!is_owner()) {
             _power = power;
-            trace("Generator received power " + _power);
+            DrSquad.log("Generator received power " + _power);
             updateState();
         }
     }
@@ -83,14 +83,14 @@ class Generator extends Widget
 
     private function _sendPowerLevel( )
     {
-        trace("Sending power " + _power);
+        DrSquad.log("Sending power " + _power);
         PubNub.room.send({type: "generator", action: "power", widgetId: _widgetId, data: _power+""});
         updateState();
     }
 
     public function buttonPushed():Void
     {
-        trace("Added power");
+        DrSquad.log("Added power");
         _power += 1.0;
         if (_power > 30.0)
         _power = 30.0;

@@ -41,7 +41,7 @@ class WaitingRoom extends FlxState
     add(_playersLabel);
     add(_messageLabel);
 
-      trace("Welcome to Waiting Room #" + PubNub.room.get_channel());
+    DrSquad.log("Welcome to Waiting Room #" + PubNub.room.get_channel());
 
     _listen_key = PubNub.room.register({type: "waitroom"});
 
@@ -74,7 +74,7 @@ class WaitingRoom extends FlxState
         switch (message.action)
         {
           case "enter":
-          trace("User #" + message.ownerId + " entered the room." );
+          DrSquad.log("User #" + message.ownerId + " entered the room." );
           if (User.me.hello(message.ownerId)) {
             User.me.team.push(message.ownerId);
             if (message.ownerId != User.me.id) {
@@ -82,10 +82,10 @@ class WaitingRoom extends FlxState
             }
           }
           case "leave":
-            trace("User #" + message.ownerId + " left the room." );
+            DrSquad.log("User #" + message.ownerId + " left the room." );
             User.me.team.remove(message.ownerId);
           case "start":
-            trace("User #" + message.ownerId + " started the game." );
+            DrSquad.log("User #" + message.ownerId + " started the game." );
             _onStart();
         }
       });
@@ -98,19 +98,18 @@ class WaitingRoom extends FlxState
         PubNub.room.send({type: "waitroom", action: "enter", ownerId: User.me.id});
       }
 
-
-        trace("USERS: " + User.me.team);
-        _frame = 0;
+      DrSquad.log("USERS: " + User.me.team);
+      _frame = 0;
       User.me.is_boss = (User.me.id == _getBossId());
       if (User.me.is_boss)
       {
-        trace( "I'm the boss! \\o/" );
+        DrSquad.log( "I'm the boss! \\o/" );
         add(_startButton);
         _messageLabel.text = "When everyone is ready hit the button!";
       }
       else
       {
-        trace( "I'm not the boss :(" );
+        DrSquad.log( "I'm not the boss :(" );
         remove(_startButton);
         _messageLabel.text = "Button? Button? Who's got the button?";
       }

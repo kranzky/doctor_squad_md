@@ -9,10 +9,10 @@ class Button extends FlxButton
 
   public function new(x, y, labeltext, callbackFunction)
   {
-    trace("button instantiated");
+    DrSquad.log("button instantiated");
     super(x, y, labeltext, _pushed);
     
-    trace("new button");
+    DrSquad.log("new button");
     _buttoncallback = callbackFunction;
    
    onDown = onHeld; 
@@ -26,7 +26,7 @@ class Button extends FlxButton
   */
   public function _pushed()
   {
-    trace("button callback fired");
+    DrSquad.log("button callback fired");
     updateState();
     if (_buttoncallback != null)
       _buttoncallback();
@@ -39,7 +39,7 @@ class Button extends FlxButton
 
   private function updateState():Void
   {
-    trace("Button was pushed!");
+    DrSquad.log("Button was pushed!");
   }
   
 }
