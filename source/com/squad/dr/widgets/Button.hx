@@ -14,7 +14,8 @@ class Button extends FlxButton
     
     DrSquad.log("new button");
     _buttoncallback = callbackFunction;
-    
+   
+   onDown = onHeld; 
   }
 
   /*
@@ -29,6 +30,11 @@ class Button extends FlxButton
     updateState();
     if (_buttoncallback != null)
       _buttoncallback();
+  }
+
+  public function onHeld()
+  {
+    //override if you care about when the button is being held down
   }
 
   private function updateState():Void
