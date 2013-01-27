@@ -11,6 +11,10 @@
 	
 	<classpath name="source" />
 	
+	<assets path="assets">
+		<sound path="dr/audio/heartbeat.mp3" id="Heartbeat" />
+	</assets>
+
 	<assets path="assets" if="android" >
 		<sound path="data/beep.wav" id="Beep" />
 		
@@ -41,8 +45,12 @@
 	
 	<assets path="assets" exclude="*.wav" if="flash" />
 	<assets path="assets" unless="flash" />
+
+	<icon name="assets/HaxeFlixel.svg" if="mac"/>
+	<icon name="assets/dr/icon.png" if="android"/>
+	<icon name="assets/dr/icon.png" if="ios"/>	
 	
-	<icon name="assets/HaxeFlixel.svg" />
+
 	
 	<haxelib name="nme" />
 	<haxelib name="flixel"/>
