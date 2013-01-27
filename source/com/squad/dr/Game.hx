@@ -54,23 +54,19 @@ class Game
   {
     if (User.me.is_boss) {
       Spawner.god.create('Generator', null, null, {});
-        //x: 400,
-        //y: 300,
-        //local: false
-        //});
       Spawner.god.create('Suction', null, null, {
         x: 40,
-        y: 300,
+        y: 350,
         local: true
       });
       Spawner.god.create('Scalpel', User.randomPlayer(), null, {
         x: 200,
-        y: 300,
+        y: 350,
         local: true
       });
       Spawner.god.create('Shock', User.randomPlayer(), null, {
-        x: 300,
-        y: 400,
+        x: 100,
+        y: 200,
         local: true
       });
       Spawner.god.create('Syringe', User.randomPlayer(), null, {
@@ -80,7 +76,7 @@ class Game
         local: true
       });
       Spawner.god.create('Passcode', User.randomPlayer(), null, {
-        x: 300,
+        x: 250,
         y: 600,
         local: true
       });
