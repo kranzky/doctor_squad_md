@@ -20,7 +20,7 @@ class Clipboard extends Widget
   private var _messageLabel:FlxText;
   private var _finished:Bool=false;
 
-  public override function initialise()
+  public override function initialise(attributes:Dynamic)
   {
     _steps = new Array<Step>();
 
