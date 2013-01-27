@@ -19,28 +19,22 @@ class Clipboard extends Widget
   private var _currentStep:Int=0;
   private var _messageLabel:FlxText;
   private var _finished:Bool=false;
+  private var _attrSteps: Array<Dynamic>;
 
   public override function initialise(attributes:Dynamic)
   {
     _steps = new Array<Step>();
 
-    var steps = attributes.steps;
-    for (step in steps)
+    _attrSteps = attributes.steps;
+    for (step in _attrSteps)
     {
-      var step = {
+      var s = {
         message: step[0],
         action:  step[1],
         data:    step[2]
       }
-      _steps.push(step);
+      _steps.push(s);
     }
-
-    step = {
-      message: "Inject Ephidrine",
-      action:  "syringe",
-      data:    "Ephidrine"
-    }
-    _steps.push(step);
 
     // TODO deregister callback
     PubNub.room.register({type: "tool"}, function(message) {
