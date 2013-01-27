@@ -2,24 +2,22 @@ package com.squad.dr.tools;
 import com.squad.dr.widgets.Widget;
 import com.squad.dr.widgets.Button;
 import org.flixel.FlxSprite;
-import org.flixel.FlxGroup;
 import com.squad.dr.PubNub;
 
-class Tool extends FlxGroup
+class Tool extends Widget
 {
   private var _toolbutton: Button;
 
   //you can pass in a callback if you like, otherwise 'onToolClick' is the default
-  public function new(widgetId, owned: Bool, canInteract: Bool, X, Y, imagename: String, toolname: String, ?callBack)
+  public override function initialise(attributes:Dynamic)
   {
-    //super(widgetId, owned, canInteract);
-    super();
-    var cb = callBack;
+    super.initialise(attributes);
+    var cb = attributes.callBack;
     if (cb == null)
       cb = onToolClick;
 
-    _toolbutton = new Button(X, Y, toolname, cb, canInteract);
-    _toolbutton.loadGraphic(imagename, false, false);
+    _toolbutton = new Button(attributes.x, attributes.y, attributes.tool_name, cb, _canInteract);
+    _toolbutton.loadGraphic(attributes.image_name, false, false);
 
     add(_toolbutton);
   }

@@ -1,5 +1,6 @@
 package com.squad.dr;
 
+import com.squad.dr.Spawner;
 import org.flixel.FlxG;
 
 class Game
@@ -39,9 +40,16 @@ class Game
   private function _state_spawn()
   {
     if (User.me.is_boss) {
-      Spawner.god.create('Generator');
-      Spawner.god.create('Scalpel');
-      Spawner.god.create('Syringe');
+      Spawner.god.create('Generator', null, null, {});
+      Spawner.god.create('Scalpel', null, null, {
+        x: 400,
+        y: 400
+      });
+      Spawner.god.create('Syringe', null, null, {
+        x: 200,
+        y: 400,
+        drugs: ["Adrenaline", "Ephidrine", "Paradoxamol"]
+      });
     }
     _switch_to('Play');
   }

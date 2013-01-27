@@ -4,6 +4,8 @@ import org.flixel.FlxState;
 
 import com.squad.dr.widgets.Widget;
 import com.squad.dr.widgets.Generator;
+import com.squad.dr.tools.Scalpel;
+import com.squad.dr.tools.Syringe;
 
 class Spawner
 {
@@ -40,7 +42,7 @@ class Spawner
     PubNub.room.deregister(_key);
   }
 
-  public function create(type, owner_id:Null<Int> = null, widget_id:Null<Int> = null) {
+  public function create(type, owner_id:Null<Int>, widget_id:Null<Int>, attributes) {
     if (owner_id == null) {
       owner_id = User.me.id;
     }
@@ -51,6 +53,7 @@ class Spawner
       type: 'GOD',
       action: 'spawn',
       data: type,
+      attributes: attributes,
       ownerId: owner_id,
       widgetId: widget_id
     });
@@ -61,9 +64,17 @@ class Spawner
     var type:String = message.data;
     var widget_id:Int = message.widgetId;
     var owner_id:Int = message.ownerId;
+    var attributes = message.attributes;
+    if (attributes.local == true && owner_id != User.me.id) {
+      return;
+    }
     switch(type) {
       case 'Generator':
-        _world.add(new Generator(widget_id, owner_id));
+        _world.add(new Generator(widget_id, owner_id, attributes));
+      case 'Scalpel':
+        _world.add(new Scalpel(widget_id, owner_id, attributes));
+      case 'Syringe':
+        _world.add(new Syringe(widget_id, owner_id, attributes));
     }
   }
 

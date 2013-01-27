@@ -4,9 +4,11 @@ import com.squad.dr.PubNub;
 
 class Scalpel extends Tool
 {
-  public function new(widgetId, owned, canInteract, X, Y)
+  public override function initialise(attributes:Dynamic)
   {
-    super(widgetId, owned, canInteract, X, Y, "assets/dr/tools/scalpel.png", "Scalpel");
+    attributes.image_name = "assets/dr/tools/scalpel.png";
+    attributes.tool_name =  "Scalpel";
+    super.initialise(attributes);
   }
 
   public override function onToolClick(): Void

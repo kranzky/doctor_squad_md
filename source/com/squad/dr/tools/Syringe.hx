@@ -5,24 +5,24 @@ import org.flixel.FlxGroup;
 
 class Syringe extends Tool
 {
-
   private var _drugButtonsGroup: FlxGroup;
   private var _drugButtons: Array<Button>;
   private var _drugNames: Array<String>;
   private var _showDrugs: Bool;
 
-  public function new(widgetId, owned, canInteract, X, Y, drugs: Array<String>)
+  public override function initialise(attributes:Dynamic)
   {
-
-    super(widgetId, owned, canInteract, X, Y, "assets/dr/tools/syringe.png", "Syringe");
-    _drugNames = drugs;
+    attributes.image_name = "assets/dr/tools/syringe.png";
+    attributes.tool_name = "Syringe";
+    super.initialise(attributes);
+    _drugNames = attributes.drugs;
     _drugButtons = new Array<Button>();
     var index = 0;
     _drugButtonsGroup = new FlxGroup();
-    for (drugname in drugs)
+    for (drugname in _drugNames)
     {
-      var b = new Button(X, Y-index*20, drugname, 
-        function(){onDrugButtonClick(drugname);}, canInteract); 
+      var b = new Button(attributes.X, attributes.Y-index*20, drugname,
+        function(){onDrugButtonClick(drugname);}, _canInteract);
       _drugButtons.push(b);
       _drugButtonsGroup.add(b);
       index ++;
@@ -32,7 +32,6 @@ class Syringe extends Tool
     toggleShowDrugs();
   }
 
-  
   private function toggleShowDrugs()
   {
     _showDrugs = !_showDrugs;
