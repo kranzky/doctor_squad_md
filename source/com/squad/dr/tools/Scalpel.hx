@@ -7,8 +7,8 @@ class Scalpel extends Tool
 {
   public override function initialise(attributes:Dynamic)
   {
-    //attributes.image_name = "assets/dr/tools/scalpel.png";
     attributes.image_info = Widget.IMAGEINFO_SQUAREBUTTON;
+    //attributes.image_info = Widget.IMAGEINFO_SCALPEL;
     attributes.tool_name = "Scalpel";
     super.initialise(attributes);
   }
