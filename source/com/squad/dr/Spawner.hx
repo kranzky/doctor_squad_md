@@ -50,6 +50,7 @@ class Spawner
   }
 
   public function create(type, owner_id:Null<Int>, widget_id:Null<Int>, attributes) {
+    trace( "ownerId: " + owner_id );
     if (owner_id == null) {
       owner_id = User.me.id;
     }
