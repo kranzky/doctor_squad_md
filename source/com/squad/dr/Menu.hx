@@ -1,5 +1,7 @@
 package com.squad.dr;
 
+import com.squad.dr.widgets.Button;
+
 import org.flixel.FlxG;
 import org.flixel.FlxState;
 import org.flixel.FlxSprite;
@@ -22,9 +24,9 @@ class Menu extends FlxState
     titleGraphic.loadGraphic("assets/dr/title.png");
     add(titleGraphic);
 
-    _startButton = new FlxButton(280, 580, "Summon Squad", _onStartClick);
-    _aboutButton = new FlxButton(280, 640, "About", _onAboutClick);
-    _exitButton = new FlxButton(280, 700, "Exit", _onExitClick);
+    _startButton = new Button(0, 520, "Play", _onStartClick);
+    _aboutButton = new Button(200, 520, "About", _onAboutClick);
+    _exitButton = new Button(400, 520, "Exit", _onExitClick);
 
     add(_startButton);
     add(_aboutButton);
