@@ -13,11 +13,12 @@ class Heartbeat extends FlxSprite
   private var _path:FlxPath;
   private var _time:Float;
   private var _frequency:Float = 7.5;
+  private var _flatlining:Bool;
 
   private var kOffsetX:Float = 600.0;
   private var kOffsetY:Float = 100.0;
   private var kScaleFactor:Float = 5.0;
-  private var kMaxPoints = 500.0;
+  private var kMaxPoints = 100.0;
 
   public function new(x, y)
   {
@@ -38,15 +39,28 @@ class Heartbeat extends FlxSprite
     if (_time > Math.PI / 5.0)
       _time -= 2 * Math.PI / 5.0;
 
-    var newY:Float = Math.tan((Std.int(_time * 20) / 20.0) * _frequency) * kScaleFactor;
+    var newY:Float = 0.5;
+    if (!_flatlining)
+      newY = Math.tan((Std.int(_time * 20) / 20.0) * _frequency) * kScaleFactor;
+    newY += kOffsetY;
 
-    _path.add(kOffsetX + _time, kOffsetY + newY);
+    var newX:Float = kOffsetX + _time;
 
-    while (_path.nodes.length > kMaxPoints)
+    if (_path.nodes.length == kMaxPoints)
     {
-      _path.removeAt(0);
+      //reuse and reposition existing point
+      var point:FlxPoint = _path.removeAt(0);
+      point.x = newX;
+      point.y = newY;
+      _path.addPoint(point);
+    }
+    else
+    {
+      //new point for the pool
+      _path.add(newX, newY);
     }
 
+    //update positions of all nodes to make them scroll across to the left
     for (point in _path.nodes)
     {
       point.x -= FlxG.elapsed * 200.0;
@@ -59,6 +73,18 @@ class Heartbeat extends FlxSprite
   {
     super.destroy();
   }
+
+
+  public function flatline():Void
+  {
+    _flatlining = true;
+  }
+
+  public function beat():Void
+  {
+    _flatlining = false;
+  }
+
 
   override public function draw():Void
   {
