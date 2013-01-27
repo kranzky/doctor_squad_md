@@ -1,7 +1,7 @@
 task :default => [:mac]
 
 task :android do
-  exec("nme test drsquad.nmml android -debug")
+  exec("nme test drsquad.nmml android -release")
 end
 
 task :windows do

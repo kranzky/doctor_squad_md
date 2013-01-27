@@ -3,6 +3,7 @@ package com.squad.dr.widgets;
 import org.flixel.FlxObject;
 import org.flixel.FlxSprite;
 import org.flixel.FlxG;
+import org.flixel.FlxSound;
 import org.flixel.FlxText;
 import org.flixel.FlxPath;
 import org.flixel.FlxPoint;
@@ -10,6 +11,8 @@ import org.flixel.FlxPoint;
 
 class Heartbeat extends FlxSprite
 {
+  private var _audioBeatTime:Float;
+  private var _beatSound:FlxSound;
   private var _path:FlxPath;
   private var _time:Float;
   private var _frequency:Float = 7.5;
@@ -29,7 +32,14 @@ class Heartbeat extends FlxSprite
     makeGraphic(640, 200, 0xff000000); //colours are ARGB
     _path = new FlxPath();   
     _path.ignoreDrawDebug = false; 
+
     _listen_key = PubNub.room.register({});
+
+    _audioBeatTime = 0.0;
+    _beatSound = new FlxSound();
+    //_beatSound.autoDestroy = false;
+    //_beatSound.loadStream("assets/dr/audio/ThemeCut.mp3", false, false);
+    _beatSound.loadEmbedded("Heartbeat", false, false);
   }
 
   public override function update():Void
@@ -44,6 +54,7 @@ class Heartbeat extends FlxSprite
       });
 
     _time += FlxG.elapsed;
+
     if (_time > Math.PI / 5.0)
       _time -= 2 * Math.PI / 5.0;
 
@@ -51,6 +62,8 @@ class Heartbeat extends FlxSprite
     if (!_flatlining)
       newY = Math.tan((Std.int(_time * 20) / 20.0) * _frequency) * kScaleFactor;
     newY += kOffsetY;
+
+    //trace(newY);
 
     var newX:Float = kOffsetX + _time;
 
@@ -72,6 +85,23 @@ class Heartbeat extends FlxSprite
     for (point in _path.nodes)
     {
       point.x -= FlxG.elapsed * 200.0;
+    }
+
+
+    _audioBeatTime -= FlxG.elapsed;
+    if (_audioBeatTime < 0.0 && (newY > 120.0 || newY < 35.0))
+    {
+      //play audio if we haven't just played it
+      _audioBeatTime = 0.45;
+
+      _beatSound = new FlxSound();
+      _beatSound.loadEmbedded("Heartbeat", false, false);
+
+      _beatSound.setVolume(1.0);
+      //_beatSound.stop();
+      _beatSound.play(false);
+      //trace("beat");
+      //trace(_beatSound);
     }
 
     //trace(_path.nodes.length);

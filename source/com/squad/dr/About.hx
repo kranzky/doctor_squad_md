@@ -16,6 +16,11 @@ class About extends FlxState
     FlxG.mouse.show();
     FlxG.bgColor = 0xff000000;
 
+    var logo = new FlxSprite(0, 0);
+    logo.loadGraphic("assets/dr/about.png");
+    add(logo);
+
+
     add(new FlxButton(280, 760, "So Wow", _onDoneClick));
   }
 
